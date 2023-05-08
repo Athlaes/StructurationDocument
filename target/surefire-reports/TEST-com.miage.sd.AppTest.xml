@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.miage.sd.AppTest" time="0.045" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="sun.desktop" value="windows"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="g:\Dev\Java Project\lastfm\target\test-classes;g:\Dev\Java Project\lastfm\target\classes;C:\Users\chart\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.15.0\jackson-core-2.15.0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson\4.10.0-alpha0\bson-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\mongodb-driver-sync\4.10.0-alpha0\mongodb-driver-sync-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\mongodb-driver-core\4.10.0-alpha0\mongodb-driver-core-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-record-codec\4.10.0-alpha0\bson-record-codec-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-kotlin\4.10.0-alpha0\bson-kotlin-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.8.10\kotlin-stdlib-jdk8-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.8.10\kotlin-stdlib-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.8.10\kotlin-stdlib-common-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.8.10\kotlin-stdlib-jdk7-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-reflect\1.8.10\kotlin-reflect-1.8.10.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-kotlinx\4.10.0-alpha0\bson-kotlinx-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-core\1.5.0\kotlinx-serialization-core-1.5.0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-core-jvm\1.5.0\kotlinx-serialization-core-jvm-1.5.0.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-fxml\11\javafx-fxml-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-fxml\11\javafx-fxml-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-controls\11\javafx-controls-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-controls\11\javafx-controls-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-graphics\11\javafx-graphics-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-graphics\11\javafx-graphics-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-base\11\javafx-base-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-base\11\javafx-base-11-win.jar;C:\Users\chart\.m2\repository\org\apache\commons\commons-csv\1.9.0\commons-csv-1.9.0.jar;C:\Users\chart\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\chart\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\chart\.m2\repository\commons-cli\commons-cli\1.4\commons-cli-1.4.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://openjdk.java.net/"/>
+    <property name="user.timezone" value="Europe/Paris"/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="FR"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-11.0.18\bin"/>
+    <property name="sun.java.command" value="C:\Users\chart\AppData\Local\Temp\surefire3667381660098198133\surefirebooter-20230508222052489_3.jar C:\Users\chart\AppData\Local\Temp\surefire3667381660098198133 2023-05-08T22-20-52_319-jvmRun1 surefire-20230508222052489_1tmp surefire_0-20230508222052489_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="g:\Dev\Java Project\lastfm\target\test-classes;g:\Dev\Java Project\lastfm\target\classes;C:\Users\chart\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.15.0\jackson-core-2.15.0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson\4.10.0-alpha0\bson-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\mongodb-driver-sync\4.10.0-alpha0\mongodb-driver-sync-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\mongodb-driver-core\4.10.0-alpha0\mongodb-driver-core-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-record-codec\4.10.0-alpha0\bson-record-codec-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-kotlin\4.10.0-alpha0\bson-kotlin-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.8.10\kotlin-stdlib-jdk8-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.8.10\kotlin-stdlib-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.8.10\kotlin-stdlib-common-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.8.10\kotlin-stdlib-jdk7-1.8.10.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlin\kotlin-reflect\1.8.10\kotlin-reflect-1.8.10.jar;C:\Users\chart\.m2\repository\org\mongodb\bson-kotlinx\4.10.0-alpha0\bson-kotlinx-4.10.0-alpha0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-core\1.5.0\kotlinx-serialization-core-1.5.0.jar;C:\Users\chart\.m2\repository\org\jetbrains\kotlinx\kotlinx-serialization-core-jvm\1.5.0\kotlinx-serialization-core-jvm-1.5.0.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-fxml\11\javafx-fxml-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-fxml\11\javafx-fxml-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-controls\11\javafx-controls-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-controls\11\javafx-controls-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-graphics\11\javafx-graphics-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-graphics\11\javafx-graphics-11-win.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-base\11\javafx-base-11.jar;C:\Users\chart\.m2\repository\org\openjfx\javafx-base\11\javafx-base-11-win.jar;C:\Users\chart\.m2\repository\org\apache\commons\commons-csv\1.9.0\commons-csv-1.9.0.jar;C:\Users\chart\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\chart\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\chart\.m2\repository\commons-cli\commons-cli\1.4\commons-cli-1.4.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\chart"/>
+    <property name="user.language" value="fr"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2023-01-17"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-11.0.18"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="g:\Dev\Java Project\lastfm"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="C:\Users\chart\AppData\Local\Temp\surefire3667381660098198133\surefirebooter-20230508222052489_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="11.0.18+9-LTS-195"/>
+    <property name="user.name" value="chart"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="18.9"/>
+    <property name="localRepository" value="C:\Users\chart\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\chart\AppData\Local\Temp\"/>
+    <property name="java.version" value="11.0.18"/>
+    <property name="user.dir" value="g:\Dev\Java Project\lastfm"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-11.0.18\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Java\jdk-17.0.6\bin;G:\Programmes\NodeJs\;C:\Program Files\Git\cmd;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\dotnet\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;F:\Programmes\Inkscape\bin;C:\Users\chart\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts;G:\Programmes\Lazarus\fpc\bin\i386-Win32;G:\Programmes\PostgreSQL\15\bin;G:\Programmes\PostgreSQL\15\lib;G:\Programmes\Maven\apache-maven-3.9.1\bin;C:\Users\chart\AppData\Local\Microsoft\WindowsApps;C:\Users\chart\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\chart\AppData\Roaming\npm;C:\Users\chart\.dotnet\tools;;."/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vm.version" value="11.0.18+9-LTS-195"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="55.0"/>
+  </properties>
+  <testcase name="shouldAnswerWithTrue" classname="com.miage.sd.AppTest" time="0.004"/>
+</testsuite>
