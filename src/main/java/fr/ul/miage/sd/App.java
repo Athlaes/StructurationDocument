@@ -4,6 +4,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.ul.miage.sd.metier.Session;
@@ -19,10 +20,11 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    public static final ObjectMapper objectMapper = new ObjectMapper();
+    public static final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     public static final String API_KEY = "d8fc70d26389ad515a644a77aa5d37b6";
     public static final String SHARED_SECRET = "5f036c442937a2a86c8024dfe5d3cd75";
     public static final Logger logger = LoggerFactory.getLogger(App.class);
+    public static final String COL_BEGINNING = "GLCYE_";
     private static String signature = null;
     private static Session session = null;
 
