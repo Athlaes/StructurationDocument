@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -13,6 +12,7 @@ import com.mongodb.MongoClientException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Track;
@@ -26,7 +26,7 @@ public class TrackRepository {
 
     public TrackRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"tracks");
-        this.collection.createIndex(Indexes.text("mbid"));
+        this.collection.createIndex(Indexes.ascending("mbid"));
     }
 
     public static TrackRepository getInstance() {
@@ -66,23 +66,19 @@ public class TrackRepository {
         try {
             Track track = App.objectMapper.readValue(App.objectMapper.writeValueAsString(trackResponse), Track.class);
 
-            List<String> tagList = new ArrayList<>();
-            for (TagResponse tag : trackResponse.getTags()) {
-                String name = TagRepository.getInstance().createOrUpdate(tag);
-                tagList.add(name);
+            if (Objects.nonNull(trackResponse.getTags())) {
+                List<String> tagList = new ArrayList<>();
+                for (TagResponse tag : trackResponse.getTags()) {
+                    String name = TagRepository.getInstance().createOrUpdate(tag);
+                    tagList.add(name);
+                }
+                track.setTagsNames(tagList);
             }
-            track.setTagsNames(tagList);
 
             track.setArtistMbid(ArtistRepository.getInstance().createOrUpdate(trackResponse.getArtist()));
             
             Document trackDocument = Document.parse(App.objectMapper.writeValueAsString(track));
-            long nbTrack = this.collection.countDocuments(new Document("mbid", trackResponse.getMbid()));
-            if (nbTrack > 0) {
-                this.collection.findOneAndUpdate(new Document("mbid", trackResponse.getMbid()), trackDocument);
-            } else {
-                trackDocument.put("_id", new ObjectId());
-                this.collection.insertOne(trackDocument);
-            }
+            this.collection.updateOne(new Document("mbid", trackResponse.getMbid()), new Document("$set", trackDocument), new UpdateOptions().upsert(true));
 
             return track.getMbid();
         } catch (JsonMappingException e) {

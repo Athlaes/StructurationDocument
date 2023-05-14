@@ -1,8 +1,10 @@
 package fr.ul.miage.sd.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumResponse {
+    private String name;
     private String artist;
     private String mbid;
     private List<TagResponse> toptags;
@@ -38,5 +40,13 @@ public class AlbumResponse {
 
     public List<TrackResponse> getTracks() {
         return tracks;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -13,6 +12,7 @@ import com.mongodb.MongoClientException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Artist;
@@ -26,7 +26,7 @@ public class ArtistRepository {
 
     public ArtistRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"artists");
-        this.collection.createIndex(Indexes.text("mbid"));
+        this.collection.createIndex(Indexes.ascending("mbid"));
     }
 
     public static ArtistRepository getInstance() {
@@ -59,32 +59,42 @@ public class ArtistRepository {
         }
     }
 
-    public String createOrUpdate(ArtistResponse artistResponse) {
+    public String createOrUpdate(ArtistResponse artistResponse) throws MongoClientException {
         try {
             Artist artist = App.objectMapper.readValue(App.objectMapper.writeValueAsString(artistResponse), Artist.class);
 
-            List<String> similarList = new ArrayList<>();
-            for (ArtistResponse similarArtist : artistResponse.getSimilar()) {
-                String mbid = this.createOrUpdate(similarArtist);
-                similarList.add(mbid);
+            if (Objects.nonNull(artistResponse.getSimilar())) {
+                List<String> similarList = new ArrayList<>();
+                for (ArtistResponse similarArtist : artistResponse.getSimilar()) {
+                    String mbid = this.createOrUpdate(similarArtist);
+                    similarList.add(mbid);
+                }
+                artist.setSimilarIds(similarList);
             }
-            artist.setSimilarIds(similarList);
 
-            List<String> tagList = new ArrayList<>();
-            for (TagResponse tag : artistResponse.getTags()) {
-                String name = TagRepository.getInstance().createOrUpdate(tag);
-                tagList.add(name);
+            if (Objects.nonNull(artistResponse.getTags())) {
+                List<String> tagList = new ArrayList<>();
+                for (TagResponse tag : artistResponse.getTags()) {
+                    String name = TagRepository.getInstance().createOrUpdate(tag);
+                    tagList.add(name);
+                }
+                artist.setTags(tagList);
             }
-            artist.setTags(tagList);
+            
+            ArtistResponse foundedArtist = this.findOne(artistResponse.getMbid());
+            if (Objects.nonNull(foundedArtist)) {
+                if (foundedArtist.getStats().getListeners() < artist.getStats().getListeners()) {
+                    artist.setEvolution("+");
+                } else if (foundedArtist.getStats().getListeners() > artist.getStats().getListeners()){
+                    artist.setEvolution("-");
+                } else {
+                    artist.setEvolution("=");
+                }
+            }
             
             Document artistDocument = Document.parse(App.objectMapper.writeValueAsString(artist));
-            long nbArtist = this.collection.countDocuments(new Document("mbid", artistResponse.getMbid()));
-            if (nbArtist > 0) {
-                this.collection.findOneAndUpdate(new Document("mbid", artistResponse.getMbid()), artistDocument);
-            } else {
-                artistDocument.put("_id", new ObjectId());
-                this.collection.insertOne(artistDocument);
-            }
+            App.logger.info(artistDocument.toJson());
+            this.collection.updateOne(new Document("mbid", artistResponse.getMbid()), new Document("$set", artistDocument), new UpdateOptions().upsert(true));
 
             return artist.getMbid();
         } catch (JsonMappingException e) {

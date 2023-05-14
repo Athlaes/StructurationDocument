@@ -1,5 +1,4 @@
 package fr.ul.miage.sd.metier;
-
 import java.util.List;
 
 public class Album {

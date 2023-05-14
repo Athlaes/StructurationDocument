@@ -1,5 +1,6 @@
 package fr.ul.miage.sd.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.ul.miage.sd.metier.Wiki;
@@ -15,6 +16,15 @@ public class TrackResponse {
     private String albumPos;
     private List<TagResponse> toptags; 
     private Wiki wiki;
+    private String evolution = "=";
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
+    }
+
+    public String getEvolution() {
+        return evolution;
+    }
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId;

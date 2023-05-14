@@ -1,5 +1,6 @@
 package fr.ul.miage.sd.metier;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Track {
@@ -13,6 +14,15 @@ public class Track {
     private String albumPos;
     private List<String> tagsNames; 
     private Wiki wiki;
+    private String evolution = "=";
+
+    public String getEvolution() {
+        return evolution;
+    }
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
+    }
 
     public void setAlbumId(String albumId) {
         this.albumId = albumId;

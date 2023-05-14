@@ -1,5 +1,6 @@
 package fr.ul.miage.sd.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.ul.miage.sd.metier.Stats;
@@ -12,6 +13,34 @@ public class ArtistResponse {
     private List<ArtistResponse> similar;
     private List<TagResponse> tags;
     private Wiki bio;
+    private String url;
+    private String evolution = "=";
+
+    public ArtistResponse() {}
+
+    public ArtistResponse(GeoArtistResponse geoArtistResponse){
+        this.name = geoArtistResponse.getName();
+        this.mbid = geoArtistResponse.getMbid();
+        this.evolution = geoArtistResponse.getEvolution();
+        this.stats = new Stats();
+        stats.setListeners(geoArtistResponse.getListeners());
+    }
+
+    public String getEvolution() {
+        return evolution;
+    }
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public void setName(String name) {
         this.name = name;

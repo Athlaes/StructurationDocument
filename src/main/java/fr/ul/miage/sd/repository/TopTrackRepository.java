@@ -15,24 +15,24 @@ import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.response.TagResponse;
 import fr.ul.miage.sd.service.MongoService;
 
-public class TagRepository {
-    private static TagRepository repository = null;
+public class TopTrackRepository {
+    private static TopTrackRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public TagRepository() {
-        this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"tags");
+    public TopTrackRepository() {
+        this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"geotoptracks");
     }
 
-    public static TagRepository getInstance() {
+    public static TopTrackRepository getInstance() {
         if(Objects.isNull(repository)) {
-            repository = new TagRepository();
+            repository = new TopTrackRepository();
         }
         return repository;
     }
 
-    public TagResponse findOne(String name) {
+    public TagResponse findOne(String country) {
         try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("name", name));
+            FindIterable<Document> findIterable = this.collection.find(new Document("country", country));
             Document document = findIterable.first();
             if(Objects.nonNull(document)){
                 return App.objectMapper.readValue(document.toJson(), TagResponse.class);

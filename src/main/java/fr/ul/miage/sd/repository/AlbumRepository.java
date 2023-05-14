@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mongodb.MongoClientException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Album;
-import fr.ul.miage.sd.metier.Tag;
 import fr.ul.miage.sd.response.AlbumResponse;
 import fr.ul.miage.sd.response.TagResponse;
 import fr.ul.miage.sd.response.TrackResponse;
@@ -27,6 +27,7 @@ public class AlbumRepository {
 
     public AlbumRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"albums");
+        this.collection.createIndex(Indexes.ascending("mbid"));
     }
 
     public static AlbumRepository getInstance() {
@@ -70,28 +71,26 @@ public class AlbumRepository {
         try {
             Album album = App.objectMapper.readValue(App.objectMapper.writeValueAsString(albumResponse), Album.class);
 
-            List<String> tagList = new ArrayList<>();
-            for (TagResponse tag : albumResponse.getToptags()) {
-                String name = TagRepository.getInstance().createOrUpdate(tag);
-                tagList.add(name);
+            if (Objects.nonNull(albumResponse.getToptags())) {
+                List<String> tagList = new ArrayList<>();
+                for (TagResponse tag : albumResponse.getToptags()) {
+                    String name = TagRepository.getInstance().createOrUpdate(tag);
+                    tagList.add(name);
+                }
+                album.setToptagsNames(tagList);
             }
-            album.setToptagsNames(tagList);
 
-            List<String> trackList = new ArrayList<>();
-            for (TrackResponse track : albumResponse.getTracks()) {
-                String mbid = TrackRepository.getInstance().createOrUpdate(track);
-                trackList.add(mbid);
+            if (Objects.nonNull(albumResponse.getTracks())) {
+                List<String> trackList = new ArrayList<>();
+                for (TrackResponse track : albumResponse.getTracks()) {
+                    String mbid = TrackRepository.getInstance().createOrUpdate(track);
+                    trackList.add(mbid);
+                }
+                album.setTracksIds(trackList);
             }
-            album.setTracksIds(tagList);
 
             Document albumDocument = Document.parse(App.objectMapper.writeValueAsString(album));
-            long nbAlbum = this.collection.countDocuments(new Document("mbid", albumResponse.getMbid()));
-            if (nbAlbum > 0) {
-                this.collection.findOneAndUpdate(new Document("mbid", albumResponse.getMbid()), albumDocument);
-            } else {
-                albumDocument.put("_id", new ObjectId());
-                this.collection.insertOne(albumDocument);
-            }
+            this.collection.updateOne(new Document("mbid", albumResponse.getMbid()), new Document("$set", albumDocument), new UpdateOptions().upsert(true));
 
             return album.getMbid();
         } catch (JsonMappingException e) {
