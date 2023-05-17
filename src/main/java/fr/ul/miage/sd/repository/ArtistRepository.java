@@ -44,11 +44,13 @@ public class ArtistRepository {
                 Artist artist = App.objectMapper.readValue(document.toJson(), Artist.class);
                 ArtistResponse artistResponse= App.objectMapper.readValue(document.toJson(), ArtistResponse.class);
 
-                List<ArtistResponse> artistList = new ArrayList<>();
-                for (String mbidSimilar : artist.getSimilarIds()) {
-                    artistList.add(this.findOne(mbidSimilar));
+                if (Objects.nonNull(artist.getSimilarIds())) {
+                    List<ArtistResponse> artistList = new ArrayList<>();
+                    for (String mbidSimilar : artist.getSimilarIds()) {
+                        artistList.add(this.findOne(mbidSimilar));
+                    }
+                    artistResponse.setSimilar(artistList);
                 }
-                artistResponse.setSimilar(artistList);
                 return artistResponse;
             }
             return null;

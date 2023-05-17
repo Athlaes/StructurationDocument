@@ -45,17 +45,21 @@ public class AlbumRepository {
                 Album album = App.objectMapper.readValue(document.toJson(), Album.class);
                 AlbumResponse albumResponse= App.objectMapper.readValue(document.toJson(), AlbumResponse.class);
 
-                List<TagResponse> tagList = new ArrayList<>();
-                for (String tagNames : album.getToptagsNames()) {
-                    tagList.add(TagRepository.getInstance().findOne(tagNames));
+                if (Objects.nonNull(album.getToptagsNames())) {
+                    List<TagResponse> tagList = new ArrayList<>();
+                    for (String tagNames : album.getToptagsNames()) {
+                        tagList.add(TagRepository.getInstance().findOne(tagNames));
+                    }
+                    albumResponse.setToptags(tagList);
                 }
-                albumResponse.setToptags(tagList);
 
-                List<TrackResponse> trackList = new ArrayList<>();
-                for (String mbidTrack : album.getTracksIds()) {
-                    trackList.add(TrackRepository.getInstance().findOne(mbidTrack));
+                if (Objects.nonNull(album.getTracksIds())) {
+                    List<TrackResponse> trackList = new ArrayList<>();
+                    for (String mbidTrack : album.getTracksIds()) {
+                        trackList.add(TrackRepository.getInstance().findOne(mbidTrack));
+                    }
+                    albumResponse.setTracks(trackList);
                 }
-                albumResponse.setTracks(trackList);
 
                 return albumResponse;
             }

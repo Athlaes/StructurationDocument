@@ -42,13 +42,15 @@ public class TopArtistRepository {
             if(Objects.nonNull(document)){
                 TopArtists topArtists = App.objectMapper.readValue(document.toJson(), TopArtists.class);
                 TopArtistsResponse topArtistsResponse = new TopArtistsResponse();
-                List<GeoArtistResponse> geoArtists = new ArrayList<>();
-                for (String artistsMbid : topArtists.getArtistsMbid()) {
-                    ArtistResponse artist = ArtistRepository.getInstance().findOne(artistsMbid);
-                    GeoArtistResponse geoArtiste = new GeoArtistResponse(artist);
-                    geoArtists.add(geoArtiste);
+                if (Objects.nonNull(topArtists.getArtistsMbid())) {
+                    List<GeoArtistResponse> geoArtists = new ArrayList<>();
+                    for (String artistsMbid : topArtists.getArtistsMbid()) {
+                        ArtistResponse artist = ArtistRepository.getInstance().findOne(artistsMbid);
+                        GeoArtistResponse geoArtiste = new GeoArtistResponse(artist);
+                        geoArtists.add(geoArtiste);
+                    }
+                    topArtistsResponse.setArtist(geoArtists);
                 }
-                topArtistsResponse.setArtist(geoArtists);
                 return App.objectMapper.readValue(document.toJson(), TopArtistsResponse.class);
             }
             return null;
