@@ -16,11 +16,15 @@ import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Artist;
-import fr.ul.miage.sd.response.ArtistResponse;
+import fr.ul.miage.sd.metier.SimilarArtist;
+import fr.ul.miage.sd.response.ArtistResponseBody;
 import fr.ul.miage.sd.response.TagResponse;
+import fr.ul.miage.sd.response.TagsResponse;
 import fr.ul.miage.sd.service.MongoService;
 
 public class ArtistRepository {
+    private static final String ERROR_PROCESSING = "Erreur dans le processing de l'objet";
+    private static final String ERROR_MAPPING = "Erreur dans le mapping de l'objet";
     private static ArtistRepository repository = null;
     private MongoCollection<Document> collection;
 
@@ -36,55 +40,59 @@ public class ArtistRepository {
         return repository;
     }
 
-    public ArtistResponse findOne(String mbid) {
-        try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
-            Document document = findIterable.first();
-            if(Objects.nonNull(document)){
-                Artist artist = App.objectMapper.readValue(document.toJson(), Artist.class);
-                ArtistResponse artistResponse= App.objectMapper.readValue(document.toJson(), ArtistResponse.class);
+    public ArtistResponseBody findOne(String mbid) {
+        FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
+        Document document = findIterable.first();
+        if(Objects.nonNull(document)){
+            return this.parseToArtistResponse(document);
+        }
+        return null;
+    }
 
-                if (Objects.nonNull(artist.getSimilarIds())) {
-                    List<ArtistResponse> artistList = new ArrayList<>();
-                    for (String mbidSimilar : artist.getSimilarIds()) {
-                        artistList.add(this.findOne(mbidSimilar));
-                    }
-                    artistResponse.setSimilar(artistList);
+    public ArtistResponseBody findOneByName(String name) {
+        FindIterable<Document> findIterable = this.collection.find(new Document("name", new Document("$regex", "(?i)"+name)));
+        Document document = findIterable.first();
+        if(Objects.nonNull(document)){
+            return this.parseToArtistResponse(document);
+        }
+        return null;
+    }
+
+    private ArtistResponseBody parseToArtistResponse(Document document) {
+        try {
+            Artist artist = App.objectMapper.readValue(document.toJson(), Artist.class);
+            ArtistResponseBody artistResponse= App.objectMapper.readValue(document.toJson(), ArtistResponseBody.class);
+
+            if (Objects.nonNull(artist.getTagsNames())) {
+                List<TagResponse> tagList = new ArrayList<>();
+                for (String tagName : artist.getTagsNames()) {
+                    tagList.add(TagRepository.getInstance().findOne(tagName));  
                 }
-                return artistResponse;
+                artistResponse.setTags(new TagsResponse(tagList));
             }
-            return null;
+            return artistResponse;
         }catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESSING, e);
         }
     }
 
-    public String createOrUpdate(ArtistResponse artistResponse) throws MongoClientException {
+    public String createOrUpdate(ArtistResponseBody artistResponse) {
         try {
             Artist artist = App.objectMapper.readValue(App.objectMapper.writeValueAsString(artistResponse), Artist.class);
 
-            if (Objects.nonNull(artistResponse.getSimilar())) {
-                List<String> similarList = new ArrayList<>();
-                for (ArtistResponse similarArtist : artistResponse.getSimilar()) {
-                    String mbid = this.createOrUpdate(similarArtist);
-                    similarList.add(mbid);
-                }
-                artist.setSimilarIds(similarList);
-            }
-
             if (Objects.nonNull(artistResponse.getTags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : artistResponse.getTags()) {
+                for (TagResponse tag : artistResponse.getTags().getTags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }
-                artist.setTags(tagList);
+                artist.setTagsNames(tagList);
             }
             
-            ArtistResponse foundedArtist = this.findOne(artistResponse.getMbid());
-            if (Objects.nonNull(foundedArtist)) {
+            ArtistResponseBody foundedArtist = this.findOne(artistResponse.getMbid());
+            if (Objects.nonNull(foundedArtist) && Objects.nonNull(foundedArtist.getStats()) && Objects.nonNull(artist.getStats())) {
                 if (foundedArtist.getStats().getListeners() < artist.getStats().getListeners()) {
                     artist.setEvolution("+");
                 } else if (foundedArtist.getStats().getListeners() > artist.getStats().getListeners()){
@@ -95,14 +103,13 @@ public class ArtistRepository {
             }
             
             Document artistDocument = Document.parse(App.objectMapper.writeValueAsString(artist));
-            App.logger.info(artistDocument.toJson());
             this.collection.updateOne(new Document("mbid", artistResponse.getMbid()), new Document("$set", artistDocument), new UpdateOptions().upsert(true));
 
             return artist.getMbid();
         } catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESSING, e);
         }
     }
 }

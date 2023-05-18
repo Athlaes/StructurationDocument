@@ -17,10 +17,13 @@ import com.mongodb.client.model.UpdateOptions;
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Track;
 import fr.ul.miage.sd.response.TagResponse;
-import fr.ul.miage.sd.response.TrackResponse;
+import fr.ul.miage.sd.response.TagsResponse;
+import fr.ul.miage.sd.response.TrackResponseBody;
 import fr.ul.miage.sd.service.MongoService;
 
 public class TrackRepository {
+    private static final String ERROR_PROCESS = "Erreur dans le processing de l'objet";
+    private static final String ERROR_MAPPING = "Erreur dans le mapping de l'objet";
     private static TrackRepository repository = null;
     private MongoCollection<Document> collection;
 
@@ -36,50 +39,67 @@ public class TrackRepository {
         return repository;
     }
 
-    public TrackResponse findOne(String mbid) {
+    public TrackResponseBody findOne(String mbid) {
+        FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
+        Document document = findIterable.first();
+        if(Objects.nonNull(document)){
+            return this.parseToTrackResponse(document);
+        }
+        return null;
+    }
+
+    public List<TrackResponseBody> findAllByTags(String searchedTag) {
+        List<TrackResponseBody> responseList = new ArrayList<>();
+        FindIterable<Document> findIterable = this.collection.find(new Document("tagsNames", searchedTag));
+        for (Document document : findIterable) {
+            TrackResponseBody trackResponse = this.parseToTrackResponse(document);
+            responseList.add(trackResponse);
+        }
+        return responseList;
+    }
+
+    private TrackResponseBody parseToTrackResponse(Document document) {
         try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
-            Document document = findIterable.first();
-            if(Objects.nonNull(document)){
-                Track track = App.objectMapper.readValue(document.toJson(), Track.class);
-                TrackResponse trackResponse= App.objectMapper.readValue(document.toJson(), TrackResponse.class);
+            Track track = App.objectMapper.readValue(document.toJson(), Track.class);
+            TrackResponseBody trackResponse= App.objectMapper.readValue(document.toJson(), TrackResponseBody.class);
 
-                if (Objects.nonNull(track.getTagsNames())) {
-                    List<TagResponse> tagList = new ArrayList<>();
-                    for (String tagName : track.getTagsNames()) {
-                        tagList.add(TagRepository.getInstance().findOne(tagName));
-                    }
-                    trackResponse.setTags(tagList);
+            if (Objects.nonNull(track.getTagsNames())) {
+                List<TagResponse> tagList = new ArrayList<>();
+                for (String tagName : track.getTagsNames()) {
+                    tagList.add(TagRepository.getInstance().findOne(tagName));
                 }
-   
-                if (Objects.nonNull(track.getArtistMbid())) {
-                    trackResponse.setArtist(ArtistRepository.getInstance().findOne(track.getArtistMbid()));
-                }
-
-                return trackResponse;
+                trackResponse.setToptags(new TagsResponse(tagList));
             }
-            return null;
+
+            if (Objects.nonNull(track.getArtistMbid())) {
+                trackResponse.setArtist(ArtistRepository.getInstance().findOne(track.getArtistMbid()));
+            }
+            return trackResponse;
         }catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESS, e);
         }
     }
 
-    public String createOrUpdate(TrackResponse trackResponse) {
+    public String createOrUpdate(TrackResponseBody trackResponse) {
         try {
             Track track = App.objectMapper.readValue(App.objectMapper.writeValueAsString(trackResponse), Track.class);
 
-            if (Objects.nonNull(trackResponse.getToptags())) {
+            if (Objects.nonNull(trackResponse.getToptags()) && Objects.nonNull(trackResponse.getToptags().getTags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : trackResponse.getToptags()) {
+                for (TagResponse tag : trackResponse.getToptags().getTags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }
                 track.setTagsNames(tagList);
             }
 
-            TrackResponse foundedTrack = this.findOne(trackResponse.getMbid());
+            if (Objects.nonNull(trackResponse.getAlbum())) {
+                track.setAlbumMbid(AlbumRepository.getInstance().createOrUpdate(trackResponse.getAlbum()));
+            }
+
+            TrackResponseBody foundedTrack = this.findOne(trackResponse.getMbid());
             if (Objects.nonNull(foundedTrack)) {
                 if (foundedTrack.getListeners() < track.getListeners()) {
                     track.setEvolution("+");
@@ -99,9 +119,9 @@ public class TrackRepository {
 
             return track.getMbid();
         } catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESS, e);
         }
     }
 }

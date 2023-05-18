@@ -45,27 +45,26 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Button layoutX="444.0" layoutY="39.0" mnemonicParsing="false" text="Chercher des similarités" />
+                  <Button layoutX="444.0" layoutY="39.0" mnemonicParsing="false" onAction="#getSimilar" text="Chercher des similarités" />
                   <TextField fx:id="txtArtiste1" layoutX="14.0" layoutY="39.0" prefHeight="25.0" prefWidth="206.0" />
                   <TextField fx:id="txtArtiste2" layoutX="229.0" layoutY="39.0" prefHeight="25.0" prefWidth="206.0" />
                   <Label layoutX="14.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Artiste 1" />
                   <Label layoutX="229.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Artiste 2" />
-                  <TableView layoutX="15.0" layoutY="98.0" prefHeight="106.0" prefWidth="570.0">
+                  <TableView fx:id="tabSimilarTracks" layoutX="15.0" layoutY="98.0" prefHeight="106.0" prefWidth="570.0">
                     <columns>
-                      <TableColumn prefWidth="139.0" text="Nom" />
-                      <TableColumn minWidth="0.0" prefWidth="101.0" text="Mbid" />
-                        <TableColumn prefWidth="108.0" text="Artiste" />
-                        <TableColumn prefWidth="128.0" text="Album" />
-                        <TableColumn prefWidth="95.0" text="Tags" />
+                      <TableColumn fx:id="colSimilarTrackName" prefWidth="139.0" text="Nom" />
+                      <TableColumn fx:id="colSimilarTrackMbid" minWidth="0.0" prefWidth="101.0" text="Mbid" />
+                        <TableColumn fx:id="colSimilarTrackArtist" prefWidth="108.0" text="Artiste" />
+                        <TableColumn fx:id="colSimilarTrackAlbum" prefWidth="128.0" text="Album" />
+                        <TableColumn fx:id="colSimilarTrackTags" prefWidth="95.0" text="Tags" />
                     </columns>
                   </TableView>
-                  <TableView layoutX="15.0" layoutY="239.0" prefHeight="106.0" prefWidth="570.0">
+                  <TableView fx:id="tabSimilarAlbums" layoutX="15.0" layoutY="239.0" prefHeight="106.0" prefWidth="570.0">
                      <columns>
-                        <TableColumn prefWidth="143.0" text="Nom" />
-                        <TableColumn prefWidth="103.0" text="Mbid" />
-                        <TableColumn prefWidth="107.0" text="Artiste" />
-                        <TableColumn prefWidth="125.0" text="Album" />
-                        <TableColumn prefWidth="94.0" text="Tags" />
+                        <TableColumn fx:id="colSimilarAlbumsName" editable="false" prefWidth="143.0" text="Nom" />
+                        <TableColumn fx:id="colSimilarAlbumsMbid" editable="false" prefWidth="148.0" text="Mbid" />
+                        <TableColumn fx:id="colSimilarAlbumsArtist" editable="false" prefWidth="160.0" text="Artiste" />
+                        <TableColumn fx:id="colSimilarAlbumsTags" editable="false" prefWidth="117.0" text="Tags" />
                      </columns>
                   </TableView>
                   <Label layoutX="15.0" layoutY="74.0" style="-fx-font-weight: bold;" text="Musiques" />

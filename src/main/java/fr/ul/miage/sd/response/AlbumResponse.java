@@ -1,52 +1,16 @@
 package fr.ul.miage.sd.response;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AlbumResponse {
-    private String name;
-    private String artist;
-    private String mbid;
-    private List<TagResponse> toptags;
-    private List<TrackResponse> tracks;
+    @JsonProperty("album")
+    private AlbumResponseBody albumResponseBody;
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public AlbumResponseBody getAlbumResponseBody() {
+        return albumResponseBody;
     }
 
-    public void setMbid(String mbid) {
-        this.mbid = mbid;
-    }
-
-    public void setToptags(List<TagResponse> toptags) {
-        this.toptags = toptags;
-    }
-
-    public void setTracks(List<TrackResponse> tracks) {
-        this.tracks = tracks;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public String getMbid() {
-        return mbid;
-    }
-
-    public List<TagResponse> getToptags() {
-        return toptags;
-    }
-
-    public List<TrackResponse> getTracks() {
-        return tracks;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    public void setAlbumResponseBody(AlbumResponseBody albumResponseBody) {
+        this.albumResponseBody = albumResponseBody;
     }
 }

@@ -41,7 +41,7 @@ public class TagRepository {
         }catch (JsonMappingException e) {
             throw new MongoClientException("Erreur dans le mapping de l'objet", e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException("Erreur dans le processing de l'objet", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class TagRepository {
         } catch (JsonMappingException e) {
             throw new MongoClientException("Erreur dans le mapping de l'objet", e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException("Erreur dans le processing de l'objet", e);
         }
     }
 }

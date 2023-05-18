@@ -16,12 +16,15 @@ import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Album;
-import fr.ul.miage.sd.response.AlbumResponse;
+import fr.ul.miage.sd.response.AlbumResponseBody;
 import fr.ul.miage.sd.response.TagResponse;
-import fr.ul.miage.sd.response.TrackResponse;
+import fr.ul.miage.sd.response.TagsResponse;
+import fr.ul.miage.sd.response.TrackResponseBody;
 import fr.ul.miage.sd.service.MongoService;
 
 public class AlbumRepository {
+    private static final String ERROR_PROCESS = "Erreur dans le processing de l'objet";
+    private static final String ERROR_MAPPING = "Erreur dans le mapping de l'objet";
     private static AlbumRepository repository = null;
     private MongoCollection<Document> collection;
 
@@ -37,47 +40,63 @@ public class AlbumRepository {
         return repository;
     }
 
-    public AlbumResponse findOne(String mbid) {
-        try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
-            Document document = findIterable.first();
+    public AlbumResponseBody findOne(String mbid) {
+        FindIterable<Document> findIterable = this.collection.find(new Document("mbid", mbid));
+        Document document = findIterable.first();
+        if(Objects.nonNull(document)){
+            return this.parseToAlbumResponse(document);
+        }
+        return null;
+    }
+
+    public List<AlbumResponseBody> findAllByTags(String searchedTag) {
+        List<AlbumResponseBody> responseList = new ArrayList<>();
+        FindIterable<Document> findIterable = this.collection.find(new Document("toptagsNames", searchedTag));
+        for (Document document : findIterable) {
             if(Objects.nonNull(document)){
-                Album album = App.objectMapper.readValue(document.toJson(), Album.class);
-                AlbumResponse albumResponse= App.objectMapper.readValue(document.toJson(), AlbumResponse.class);
-
-                if (Objects.nonNull(album.getToptagsNames())) {
-                    List<TagResponse> tagList = new ArrayList<>();
-                    for (String tagNames : album.getToptagsNames()) {
-                        tagList.add(TagRepository.getInstance().findOne(tagNames));
-                    }
-                    albumResponse.setToptags(tagList);
-                }
-
-                if (Objects.nonNull(album.getTracksIds())) {
-                    List<TrackResponse> trackList = new ArrayList<>();
-                    for (String mbidTrack : album.getTracksIds()) {
-                        trackList.add(TrackRepository.getInstance().findOne(mbidTrack));
-                    }
-                    albumResponse.setTracks(trackList);
-                }
-
-                return albumResponse;
+                AlbumResponseBody albumResponse = this.parseToAlbumResponse(document);
+                responseList.add(albumResponse);
             }
-            return null;
+        }
+        return responseList;
+    }
+
+    private AlbumResponseBody parseToAlbumResponse(Document document) {
+        try {
+            Album album = App.objectMapper.readValue(document.toJson(), Album.class);
+            AlbumResponseBody albumResponse= App.objectMapper.readValue(document.toJson(), AlbumResponseBody.class);
+
+            if (Objects.nonNull(album.getToptagsNames())) {
+                List<TagResponse> tagList = new ArrayList<>();
+                for (String tagNames : album.getToptagsNames()) {
+                    tagList.add(TagRepository.getInstance().findOne(tagNames));
+                }
+                albumResponse.setToptags(new TagsResponse(tagList));
+            }
+
+            if (Objects.nonNull(album.getTracksIds())) {
+                List<TrackResponseBody> trackList = new ArrayList<>();
+                for (String mbidTrack : album.getTracksIds()) {
+                    trackList.add(TrackRepository.getInstance().findOne(mbidTrack));
+                }
+                albumResponse.setTracks(trackList);
+            }
+            
+            return albumResponse;
         }catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESS, e);
         }
     }
 
-    public String createOrUpdate(AlbumResponse albumResponse) {
+    public String createOrUpdate(AlbumResponseBody albumResponse) {
         try {
             Album album = App.objectMapper.readValue(App.objectMapper.writeValueAsString(albumResponse), Album.class);
 
             if (Objects.nonNull(albumResponse.getToptags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : albumResponse.getToptags()) {
+                for (TagResponse tag : albumResponse.getToptags().getTags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }
@@ -86,7 +105,7 @@ public class AlbumRepository {
 
             if (Objects.nonNull(albumResponse.getTracks())) {
                 List<String> trackList = new ArrayList<>();
-                for (TrackResponse track : albumResponse.getTracks()) {
+                for (TrackResponseBody track : albumResponse.getTracks()) {
                     String mbid = TrackRepository.getInstance().createOrUpdate(track);
                     trackList.add(mbid);
                 }
@@ -98,9 +117,9 @@ public class AlbumRepository {
 
             return album.getMbid();
         } catch (JsonMappingException e) {
-            throw new MongoClientException("Erreur dans le mapping de l'objet", e);
+            throw new MongoClientException(ERROR_MAPPING, e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException(ERROR_PROCESS, e);
         }
     }
 }

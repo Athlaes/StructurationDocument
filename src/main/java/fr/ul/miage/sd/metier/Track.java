@@ -1,7 +1,6 @@
 package fr.ul.miage.sd.metier;
 
 import java.util.List;
-
 public class Track {
     private String name;
     private String mbid;
@@ -9,8 +8,7 @@ public class Track {
     private int listeners;
     private int playcount;
     private String artistMbid;
-    private String albumId;
-    private String albumPos;
+    private String albumMbid;
     private List<String> tagsNames; 
     private Wiki wiki;
     private String url;
@@ -30,14 +28,6 @@ public class Track {
 
     public void setEvolution(String evolution) {
         this.evolution = evolution;
-    }
-
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
-    }
-
-    public void setAlbumPos(String albumPos) {
-        this.albumPos = albumPos;
     }
 
     public void setArtistMbid(String artistMbid) {
@@ -72,14 +62,6 @@ public class Track {
         this.wiki = wiki;
     }
 
-    public String getAlbumId() {
-        return albumId;
-    }
-
-    public String getAlbumPos() {
-        return albumPos;
-    }
-
     public String getArtistMbid() {
         return artistMbid;
     }
@@ -110,5 +92,13 @@ public class Track {
 
     public Wiki getWiki() {
         return wiki;
+    }
+
+    public String getAlbumMbid() {
+        return albumMbid;
+    }
+
+    public void setAlbumMbid(String albumMbid) {
+        this.albumMbid = albumMbid;
     }
 }

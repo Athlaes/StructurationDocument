@@ -1,24 +1,32 @@
-package fr.ul.miage.sd.metier;
+package fr.ul.miage.sd.response;
 
-import java.util.List;
 
-import fr.ul.miage.sd.response.GeoArtistResponse;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Artist {
+import fr.ul.miage.sd.metier.SimilarArtist;
+import fr.ul.miage.sd.metier.Stats;
+import fr.ul.miage.sd.metier.Wiki;
+
+public class ArtistResponseBody {
     private String name;
     private String mbid;
     private Stats stats;    
     private SimilarArtist similar;
-    private List<String> tagsNames;
+    @JsonProperty("tags")
+    @JsonAlias("toptags")
+    private TagsResponse tags; 
     private Wiki bio;
     private String url;
     private String evolution = "=";
 
-    public Artist(){}
+    public ArtistResponseBody() {}
 
-    public Artist(GeoArtistResponse geoArtistResponse){
+    public ArtistResponseBody(GeoArtistResponse geoArtistResponse){
         this.name = geoArtistResponse.getName();
         this.mbid = geoArtistResponse.getMbid();
+        this.evolution = geoArtistResponse.getEvolution();
+        this.url = geoArtistResponse.getUrl();
         this.evolution = geoArtistResponse.getEvolution();
         this.stats = new Stats();
         stats.setListeners(geoArtistResponse.getListeners());
@@ -27,7 +35,7 @@ public class Artist {
     public String getEvolution() {
         return evolution;
     }
-    
+
     public void setEvolution(String evolution) {
         this.evolution = evolution;
     }
@@ -38,6 +46,26 @@ public class Artist {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBio(Wiki bio) {
+        this.bio = bio;
+    }
+
+    public void setMbid(String mbid) {
+        this.mbid = mbid;
+    }
+
+    public void setStats(Stats stats) {
+        this.stats = stats;
+    }
+
+    public Wiki getBio() {
+        return bio;
     }
 
     public String getMbid() {
@@ -52,39 +80,19 @@ public class Artist {
         return stats;
     }
 
-    public void setMbid(String mbid) {
-        this.mbid = mbid;
+    public TagsResponse getTags() {
+        return tags;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setStats(Stats stats) {
-        this.stats = stats;
-    }
-
-    public Wiki getBio() {
-        return bio;
-    }
-
-    public void setBio(Wiki bio) {
-        this.bio = bio;
-    }
-
-    public List<String> getTagsNames() {
-        return tagsNames;
-    }
-
-    public void setTagsNames(List<String> tagsNames) {
-        this.tagsNames = tagsNames;
-    }
-
-    public SimilarArtist getSimilar() {
-        return similar;
+    public void setTags(TagsResponse tags) {
+        this.tags = tags;
     }
 
     public void setSimilar(SimilarArtist similar) {
         this.similar = similar;
+    }
+
+    public SimilarArtist getSimilar() {
+        return similar;
     }
 }

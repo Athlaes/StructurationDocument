@@ -15,12 +15,13 @@ import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.TopArtists;
-import fr.ul.miage.sd.response.ArtistResponse;
+import fr.ul.miage.sd.response.ArtistResponseBody;
 import fr.ul.miage.sd.response.GeoArtistResponse;
 import fr.ul.miage.sd.response.TopArtistsResponse;
 import fr.ul.miage.sd.service.MongoService;
 
 public class TopArtistRepository {
+    private static final String COUNTRY = "country";
     private static TopArtistRepository repository = null;
     private MongoCollection<Document> collection;
 
@@ -37,7 +38,7 @@ public class TopArtistRepository {
 
     public TopArtistsResponse findOne(String country) {
         try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("country", country));
+            FindIterable<Document> findIterable = this.collection.find(new Document(COUNTRY, country));
             Document document = findIterable.first();
             if(Objects.nonNull(document)){
                 TopArtists topArtists = App.objectMapper.readValue(document.toJson(), TopArtists.class);
@@ -45,7 +46,7 @@ public class TopArtistRepository {
                 if (Objects.nonNull(topArtists.getArtistsMbid())) {
                     List<GeoArtistResponse> geoArtists = new ArrayList<>();
                     for (String artistsMbid : topArtists.getArtistsMbid()) {
-                        ArtistResponse artist = ArtistRepository.getInstance().findOne(artistsMbid);
+                        ArtistResponseBody artist = ArtistRepository.getInstance().findOne(artistsMbid);
                         GeoArtistResponse geoArtiste = new GeoArtistResponse(artist);
                         geoArtists.add(geoArtiste);
                     }
@@ -57,19 +58,19 @@ public class TopArtistRepository {
         }catch (JsonMappingException e) {
             throw new MongoClientException("Erreur dans le mapping de l'objet", e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException("Erreur dans le processing de l'objet", e);
         }
     }
 
     public String createOrUpdate(TopArtistsResponse artistsResponse) {
         try {
             TopArtists topArtists = new TopArtists();
-            topArtists.setCountry(artistsResponse.getAttributes().get("country"));
+            topArtists.setCountry(artistsResponse.getAttributes().get(COUNTRY));
 
             if (Objects.nonNull(artistsResponse.getArtist())) {
                 List<String> artistIds = new ArrayList<>();
                 for (GeoArtistResponse res : artistsResponse.getArtist()) {
-                    ArtistResponse artist = new ArtistResponse(res);
+                    ArtistResponseBody artist = new ArtistResponseBody(res);
                     String artisteId = ArtistRepository.getInstance().createOrUpdate(artist);
                     artistIds.add(artisteId);
                 }
@@ -77,13 +78,13 @@ public class TopArtistRepository {
             }
 
             Document topArtistDocument = Document.parse(App.objectMapper.writeValueAsString(topArtists));
-            this.collection.updateOne(new Document("country", topArtists.getCountry()), new Document("$set", topArtistDocument), new UpdateOptions().upsert(true));
+            this.collection.updateOne(new Document(COUNTRY, topArtists.getCountry()), new Document("$set", topArtistDocument), new UpdateOptions().upsert(true));
             
             return topArtists.getCountry();
         } catch (JsonMappingException e) {
             throw new MongoClientException("Erreur dans le mapping de l'objet", e);
         } catch (JsonProcessingException e) {
-            throw new MongoClientException("Erreur dans le procesisng de l'objet", e);
+            throw new MongoClientException("Erreur dans le processing de l'objet", e);
         }
     }
 }

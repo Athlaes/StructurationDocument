@@ -9,7 +9,7 @@ public class GeoTrackResponse {
 
     public GeoTrackResponse () {}
 
-    public GeoTrackResponse(TrackResponse trackResponse) {
+    public GeoTrackResponse(TrackResponseBody trackResponse) {
         this.name = trackResponse.getName();
         this.listeners = trackResponse.getListeners();
         this.url = trackResponse.getUrl();

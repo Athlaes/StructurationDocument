@@ -1,16 +1,14 @@
 package fr.ul.miage.sd.metier;
 
-import java.util.Date;
-
 public class Wiki {
-    private Date published;
+    private String published;
     private String summary;
 
-    public void setPublished(Date published) {
+    public void setPublished(String published) {
         this.published = published;
     }
 
-    public Date getPublished() {
+    public String getPublished() {
         return published;
     }
 

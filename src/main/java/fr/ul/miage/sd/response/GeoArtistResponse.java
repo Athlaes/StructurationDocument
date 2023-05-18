@@ -9,7 +9,7 @@ public class GeoArtistResponse {
     
     public GeoArtistResponse() {}
  
-    public GeoArtistResponse(ArtistResponse artistResponse) {
+    public GeoArtistResponse(ArtistResponseBody artistResponse) {
         this.name = artistResponse.getName();
         this.evolution = artistResponse.getEvolution();
         this.mbid = artistResponse.getMbid();

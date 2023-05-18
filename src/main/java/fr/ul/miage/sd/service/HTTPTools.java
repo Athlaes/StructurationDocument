@@ -8,6 +8,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import fr.ul.miage.sd.App;
 
 /**
@@ -17,6 +20,8 @@ import fr.ul.miage.sd.App;
 public class HTTPTools {
 	// temps minimum d'une requête HTTP en ms (4 seconds)
 	private static int mt = 4000;
+
+	private static Logger logger = LoggerFactory.getLogger(HTTPTools.class);
 	
 	// dernière requête HTTP
 	private static long last;
@@ -28,6 +33,7 @@ public class HTTPTools {
 	 * @throws IOException
 	 */
 	public static String sendGet(String url, boolean timer) throws IOException {
+		url = url.replace(" ", "%20");
         url += "&api_key=" + App.API_KEY;
 		if (Objects.nonNull(App.getSignature())) {
 			url += String.format("&api_sig=%s", App.getSignature());
@@ -41,6 +47,7 @@ public class HTTPTools {
 		while (timer && (System.currentTimeMillis() - last < mt));
 		last = System.currentTimeMillis();
 		HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+		logger.info(String.format("Appel vers : %s", url));
 		try {
 			// préparation de la requête
 			StringBuilder result = new StringBuilder();
@@ -58,7 +65,6 @@ public class HTTPTools {
 			// fermeture du lecteur et retour
 			br.close();
 			isr.close();
-			App.logger.info(result.toString());
 			return result.toString();
 		} catch (IOException e) {
 			if (conn.getResponseCode() == 403) {
