@@ -90,6 +90,15 @@
                   <Label layoutX="289.0" layoutY="23.0" style="-fx-font-weight: bold;" text="Classement" />
                   <ChoiceBox fx:id="selectCountry" layoutX="65.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
                   <ChoiceBox fx:id="selectClassement" layoutX="364.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
+                  <TableView fx:id="tabClassementT" layoutX="28.0" layoutY="54.0" prefHeight="300.0" prefWidth="546.0">
+                     <columns>
+                        <TableColumn fx:id="colNameT" editable="false" prefWidth="91.0" sortable="false" text="Nom" />
+                        <TableColumn fx:id="colNbEcouteT" editable="false" prefWidth="113.0" sortType="DESCENDING" text="Nombre d'écoute" />
+                        <TableColumn fx:id="colMbidT" editable="false" prefWidth="107.0" sortable="false" text="Mbid" />
+                        <TableColumn fx:id="colUrlT" editable="false" prefWidth="163.0" sortable="false" text="Url" />
+                        <TableColumn fx:id="colEvolutionT" editable="false" prefWidth="71.0" sortable="false" text="Evolution" />
+                     </columns>
+                  </TableView>
                </children></AnchorPane>
         </content>
       </Tab>

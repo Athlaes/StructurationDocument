@@ -1,29 +1,22 @@
 package fr.ul.miage.sd.response;
 
-public class GeoArtistResponse {
+public class GeoTrackResponse {
     private String name;
-    private int listeners;
     private String mbid;
     private String url;
-    private String evolution = "=";
-    
-    public GeoArtistResponse() {}
- 
-    public GeoArtistResponse(ArtistResponse artistResponse) {
-        this.name = artistResponse.getName();
-        this.evolution = artistResponse.getEvolution();
-        this.mbid = artistResponse.getMbid();
-        this.evolution = artistResponse.getEvolution();
-        this.url = artistResponse.getUrl();
-        this.listeners = artistResponse.getStats().getListeners();
+    private int listeners;
+    private String evolution = "+";
+
+    public GeoTrackResponse () {}
+
+    public GeoTrackResponse(TrackResponse trackResponse) {
+        this.name = trackResponse.getName();
+        this.listeners = trackResponse.getListeners();
+        this.url = trackResponse.getUrl();
     }
 
     public String getEvolution() {
         return evolution;
-    }
-
-    public void setEvolution(String evolution) {
-        this.evolution = evolution;
     }
 
     public int getListeners() {
@@ -37,9 +30,12 @@ public class GeoArtistResponse {
     public String getName() {
         return name;
     }
-
     public String getUrl() {
         return url;
+    }
+
+    public void setEvolution(String evolution) {
+        this.evolution = evolution;
     }
 
     public void setListeners(int listeners) {

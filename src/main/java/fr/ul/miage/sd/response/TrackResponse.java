@@ -1,6 +1,5 @@
 package fr.ul.miage.sd.response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.ul.miage.sd.metier.Wiki;
@@ -16,10 +15,37 @@ public class TrackResponse {
     private String albumPos;
     private List<TagResponse> toptags; 
     private Wiki wiki;
+    private String url;
     private String evolution = "=";
+
+    public TrackResponse () {}
+
+    public TrackResponse(GeoTrackResponse geoTrackResponse) {
+        this.name = geoTrackResponse.getName();
+        this.url = geoTrackResponse.getUrl();
+        this.evolution = geoTrackResponse.getEvolution();
+        this.listeners = geoTrackResponse.getListeners();
+        this.mbid = geoTrackResponse.getMbid();
+    }
 
     public void setEvolution(String evolution) {
         this.evolution = evolution;
+    }
+
+    public List<TagResponse> getToptags() {
+        return toptags;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setToptags(List<TagResponse> toptags) {
+        this.toptags = toptags;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getEvolution() {
@@ -96,10 +122,6 @@ public class TrackResponse {
 
     public int getPlaycount() {
         return playcount;
-    }
-
-    public List<TagResponse> getTags() {
-        return toptags;
     }
 
     public Wiki getWiki() {

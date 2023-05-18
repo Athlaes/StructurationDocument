@@ -1,5 +1,7 @@
 package fr.ul.miage.sd.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.bson.Document;
@@ -12,7 +14,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
+import fr.ul.miage.sd.metier.TopTrack;
+import fr.ul.miage.sd.response.GeoTrackResponse;
 import fr.ul.miage.sd.response.TagResponse;
+import fr.ul.miage.sd.response.TopTracksResponse;
+import fr.ul.miage.sd.response.TrackResponse;
 import fr.ul.miage.sd.service.MongoService;
 
 public class TopTrackRepository {
@@ -30,12 +36,23 @@ public class TopTrackRepository {
         return repository;
     }
 
-    public TagResponse findOne(String country) {
+    public TopTracksResponse findOne(String country) {
         try {
             FindIterable<Document> findIterable = this.collection.find(new Document("country", country));
             Document document = findIterable.first();
             if(Objects.nonNull(document)){
-                return App.objectMapper.readValue(document.toJson(), TagResponse.class);
+                TopTrack topTrack = App.objectMapper.readValue(document.toJson(), TopTrack.class);
+                TopTracksResponse topTracksResponse = new TopTracksResponse();
+                if (Objects.nonNull(topTrack.getTracksMbids())) {
+                    List<GeoTrackResponse> tracks = new ArrayList<>();
+                    for (String mbid : topTrack.getTracksMbids()) {
+                        TrackResponse trackResponse = TrackRepository.getInstance().findOne(mbid);
+                        GeoTrackResponse geoTrackResponse = new GeoTrackResponse(trackResponse);
+                        tracks.add(geoTrackResponse);
+                    }
+                    topTracksResponse.setTrack(tracks);
+                }
+                return topTracksResponse;
             }
             return null;
         }catch (JsonMappingException e) {
@@ -45,11 +62,25 @@ public class TopTrackRepository {
         }
     }
 
-    public String createOrUpdate(TagResponse tagResponse) {
+    public String createOrUpdate(TopTracksResponse tracksResponse) {
         try {
-            Document tagDocument = Document.parse(App.objectMapper.writeValueAsString(tagResponse));
-            this.collection.updateOne(new Document("name", tagResponse.getName()), new Document("$set", tagDocument), new UpdateOptions().upsert(true));
-            return tagResponse.getName();
+            TopTrack topTracks = new TopTrack();
+            topTracks.setCountry(tracksResponse.getAttributes().get("country"));
+
+            if (Objects.nonNull(tracksResponse.getTrack())) {
+                List<String> trackMbids = new ArrayList<>();
+                for (GeoTrackResponse res : tracksResponse.getTrack()) {
+                    TrackResponse track = new TrackResponse(res);
+                    String trackMbid = TrackRepository.getInstance().createOrUpdate(track);
+                    trackMbids.add(trackMbid);
+                }
+                topTracks.setTracksMbids(trackMbids);
+            }
+
+            Document topTracksDocument = Document.parse(App.objectMapper.writeValueAsString(topTracks));
+            this.collection.updateOne(new Document("country", topTracks.getCountry()), new Document("$set", topTracksDocument), new UpdateOptions().upsert(true));
+            
+            return topTracks.getCountry();
         } catch (JsonMappingException e) {
             throw new MongoClientException("Erreur dans le mapping de l'objet", e);
         } catch (JsonProcessingException e) {

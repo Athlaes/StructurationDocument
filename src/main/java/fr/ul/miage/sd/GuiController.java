@@ -4,11 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import fr.ul.miage.sd.repository.TopArtistRepository;
+import fr.ul.miage.sd.repository.TopTrackRepository;
 import fr.ul.miage.sd.response.GeoArtistResponse;
 import fr.ul.miage.sd.response.GeoTopArtistsResponse;
+import fr.ul.miage.sd.response.GeoTopTracksResponse;
+import fr.ul.miage.sd.response.GeoTrackResponse;
 import fr.ul.miage.sd.response.SessionResponse;
 import fr.ul.miage.sd.response.TokenResponse;
 import fr.ul.miage.sd.response.TopArtistsResponse;
+import fr.ul.miage.sd.response.TopTracksResponse;
 import fr.ul.miage.sd.service.HTTPTools;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +31,7 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class GuiController {
@@ -79,19 +84,37 @@ public class GuiController {
     private TableView<GeoArtistResponse> tabClassement;
 
     @FXML
-    private TableColumn<Object, String> colName;
+    private TableColumn<GeoArtistResponse, String> colName;
 
     @FXML
-    private TableColumn<Object, String> colNbEcoute;
+    private TableColumn<GeoArtistResponse, String> colNbEcoute;
 
     @FXML
-    private TableColumn<Object, String> colMbid;
+    private TableColumn<GeoArtistResponse, String> colMbid;
 
     @FXML
-    private TableColumn<Object, String> colUrl;
+    private TableColumn<GeoArtistResponse, String> colUrl;
 
     @FXML
-    private TableColumn<Object, String> colEvolution;
+    private TableColumn<GeoArtistResponse, String> colEvolution;
+
+    @FXML
+    private TableView<GeoTrackResponse> tabClassementT;
+
+    @FXML
+    private TableColumn<GeoTrackResponse, String> colNameT;
+
+    @FXML
+    private TableColumn<GeoTrackResponse, String> colNbEcouteT;
+
+    @FXML
+    private TableColumn<GeoTrackResponse, String> colMbidT;
+
+    @FXML
+    private TableColumn<GeoTrackResponse, String> colUrlT;
+
+    @FXML
+    private TableColumn<GeoTrackResponse, String> colEvolutionT;
 
 
     private final ObservableList<String> selectTypeFields = FXCollections.observableArrayList("Musique", "Artiste", "Tag", "Album");
@@ -103,36 +126,7 @@ public class GuiController {
     private void initialize() {
         this.btnDeconnexion.setDisable(true);
         this.setupTabClassement();
-
-        
-        this.selectType.setItems(selectTypeFields);
-        this.selectType.getSelectionModel().select("Musique");
-        this.manageSelectionChange("Musique");
-        this.selectType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-                manageSelectionChange(arg2);
-            }
-        });
-        
-        this.selectCountry.setItems(App.pays);
-        this.selectCountry.getSelectionModel().select("France");
-        this.selectCountry.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-                manageCountryChange(arg2);
-            }
-        });
-        
-        this.selectClassement.setItems(this.selectClassementFields);
-        this.selectClassement.getSelectionModel().select("Artiste");
-        this.selectType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
-                getClassement();
-            }
-        });
-
+        this.setupSelects();
         this.getClassement();
     }
 
@@ -142,10 +136,11 @@ public class GuiController {
         this.colEvolution.setCellValueFactory(new PropertyValueFactory<>("evolution"));
         this.colMbid.setCellValueFactory(new PropertyValueFactory<>("mbid"));
         this.colUrl.setCellValueFactory(new PropertyValueFactory<>("url"));
-    }
-
-    private void manageCountryChange(String value) {
-        // TODO : TO WRITTE
+        this.colNameT.setCellValueFactory(new PropertyValueFactory<>("name"));
+        this.colNbEcouteT.setCellValueFactory(new PropertyValueFactory<>("listeners"));
+        this.colEvolutionT.setCellValueFactory(new PropertyValueFactory<>("evolution"));
+        this.colMbidT.setCellValueFactory(new PropertyValueFactory<>("mbid"));
+        this.colUrlT.setCellValueFactory(new PropertyValueFactory<>("url"));
     }
 
     private void manageSelectionChange(String value) {
@@ -200,13 +195,41 @@ public class GuiController {
             String method = "";
             if (categ.equalsIgnoreCase("Artiste")) {
                 method = "geo.gettopartists";
+                GeoTopArtistsResponse response = App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=%s&country=%s&limit=10", method, pays), true), GeoTopArtistsResponse.class);
+                TopArtistRepository.getInstance().createOrUpdate(response.getTopartists());
+                TopArtistsResponse classement = TopArtistRepository.getInstance().findOne(pays);
+                ObservableList<GeoArtistResponse> geoArtists = FXCollections.observableArrayList(classement.getArtist());
+                geoArtists.sort((x, y)  -> {
+                    if (x.getListeners() < y.getListeners()) {
+                        return 1;
+                    } else if (x.getListeners() > y.getListeners()) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+            });
+                this.tabClassement.setItems(geoArtists);
+                this.tabClassement.setVisible(true);
+                this.tabClassementT.setVisible(false);
             } else if (categ.equalsIgnoreCase("Musique")) {
                 method = "geo.gettoptracks";
+                GeoTopTracksResponse response = App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=%s&country=%s&limit=10", method, pays), true), GeoTopTracksResponse.class);
+                TopTrackRepository.getInstance().createOrUpdate(response.getTracks());
+                TopTracksResponse classement = TopTrackRepository.getInstance().findOne(pays);
+                ObservableList<GeoTrackResponse> geoTracks = FXCollections.observableArrayList(classement.getTrack());
+                geoTracks.sort((x, y)  -> {
+                        if (x.getListeners() < y.getListeners()) {
+                            return 1;
+                        } else if (x.getListeners() > y.getListeners()) {
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                });
+                this.tabClassementT.setItems(geoTracks);
+                this.tabClassement.setVisible(false);
+                this.tabClassementT.setVisible(true);
             }
-            GeoTopArtistsResponse response = App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=%s&country=%s&limit=10", method, pays), true), GeoTopArtistsResponse.class);
-            TopArtistRepository.getInstance().createOrUpdate(response.getTopartists());
-            ObservableList<GeoArtistResponse> geoArtists = FXCollections.observableArrayList(response.getTopartists().getArtist());
-            this.tabClassement.setItems(geoArtists);
         } catch (IOException e) {
             App.logger.error("Impossible d'effectuer l'appel pour le classement", e);
         }
@@ -246,5 +269,35 @@ public class GuiController {
                 App.logger.info("L'utilisateur n'a pas accepté l'application sur le navigateur");
             }
         }
+    }
+
+    private void setupSelects() {
+        this.selectType.setItems(selectTypeFields);
+        this.selectType.getSelectionModel().select("Musique");
+        this.manageSelectionChange("Musique");
+        this.selectType.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+                manageSelectionChange(arg2);
+            }
+        });
+        
+        this.selectCountry.setItems(App.pays);
+        this.selectCountry.getSelectionModel().select("France");
+        this.selectCountry.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+                getClassement();
+            }
+        });
+        
+        this.selectClassement.setItems(this.selectClassementFields);
+        this.selectClassement.getSelectionModel().select("Artiste");
+        this.selectClassement.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+                getClassement();
+            }
+        });
     }
 }

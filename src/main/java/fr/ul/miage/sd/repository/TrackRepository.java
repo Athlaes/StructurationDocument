@@ -44,13 +44,17 @@ public class TrackRepository {
                 Track track = App.objectMapper.readValue(document.toJson(), Track.class);
                 TrackResponse trackResponse= App.objectMapper.readValue(document.toJson(), TrackResponse.class);
 
-                List<TagResponse> tagList = new ArrayList<>();
-                for (String tagName : track.getTagsNames()) {
-                    tagList.add(TagRepository.getInstance().findOne(tagName));
+                if (Objects.nonNull(track.getTagsNames())) {
+                    List<TagResponse> tagList = new ArrayList<>();
+                    for (String tagName : track.getTagsNames()) {
+                        tagList.add(TagRepository.getInstance().findOne(tagName));
+                    }
+                    trackResponse.setTags(tagList);
                 }
-                trackResponse.setTags(tagList);
-
-                trackResponse.setArtist(ArtistRepository.getInstance().findOne(track.getArtistMbid()));
+   
+                if (Objects.nonNull(track.getArtistMbid())) {
+                    trackResponse.setArtist(ArtistRepository.getInstance().findOne(track.getArtistMbid()));
+                }
 
                 return trackResponse;
             }
@@ -66,16 +70,29 @@ public class TrackRepository {
         try {
             Track track = App.objectMapper.readValue(App.objectMapper.writeValueAsString(trackResponse), Track.class);
 
-            if (Objects.nonNull(trackResponse.getTags())) {
+            if (Objects.nonNull(trackResponse.getToptags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : trackResponse.getTags()) {
+                for (TagResponse tag : trackResponse.getToptags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }
                 track.setTagsNames(tagList);
             }
 
-            track.setArtistMbid(ArtistRepository.getInstance().createOrUpdate(trackResponse.getArtist()));
+            TrackResponse foundedTrack = this.findOne(trackResponse.getMbid());
+            if (Objects.nonNull(foundedTrack)) {
+                if (foundedTrack.getListeners() < track.getListeners()) {
+                    track.setEvolution("+");
+                } else if (foundedTrack.getListeners() > track.getListeners()){
+                    track.setEvolution("-");
+                } else {
+                    track.setEvolution("=");
+                }
+            }
+
+            if (Objects.nonNull(trackResponse.getArtist())) {
+                track.setArtistMbid(ArtistRepository.getInstance().createOrUpdate(trackResponse.getArtist()));
+            }
             
             Document trackDocument = Document.parse(App.objectMapper.writeValueAsString(track));
             this.collection.updateOne(new Document("mbid", trackResponse.getMbid()), new Document("$set", trackDocument), new UpdateOptions().upsert(true));

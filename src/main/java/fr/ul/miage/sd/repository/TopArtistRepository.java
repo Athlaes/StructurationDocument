@@ -51,7 +51,7 @@ public class TopArtistRepository {
                     }
                     topArtistsResponse.setArtist(geoArtists);
                 }
-                return App.objectMapper.readValue(document.toJson(), TopArtistsResponse.class);
+                return topArtistsResponse;
             }
             return null;
         }catch (JsonMappingException e) {

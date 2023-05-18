@@ -22,6 +22,8 @@ public class ArtistResponse {
         this.name = geoArtistResponse.getName();
         this.mbid = geoArtistResponse.getMbid();
         this.evolution = geoArtistResponse.getEvolution();
+        this.url = geoArtistResponse.getUrl();
+        this.evolution = geoArtistResponse.getEvolution();
         this.stats = new Stats();
         stats.setListeners(geoArtistResponse.getListeners());
     }
