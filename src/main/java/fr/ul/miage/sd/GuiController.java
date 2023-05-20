@@ -8,6 +8,7 @@ import fr.ul.miage.sd.repository.ArtistRepository;
 import fr.ul.miage.sd.repository.TopArtistRepository;
 import fr.ul.miage.sd.repository.TopTrackRepository;
 import fr.ul.miage.sd.repository.TrackRepository;
+import fr.ul.miage.sd.response.AlbumResponse;
 import fr.ul.miage.sd.response.AlbumResponseBody;
 import fr.ul.miage.sd.response.ArtistResponse;
 import fr.ul.miage.sd.response.ArtistResponseBody;
@@ -22,6 +23,7 @@ import fr.ul.miage.sd.response.TagTopTrackResponse;
 import fr.ul.miage.sd.response.TokenResponse;
 import fr.ul.miage.sd.response.TopArtistsResponse;
 import fr.ul.miage.sd.response.TopTracksResponse;
+import fr.ul.miage.sd.response.TrackResponse;
 import fr.ul.miage.sd.response.TrackResponseBody;
 import fr.ul.miage.sd.service.HTTPTools;
 import javafx.beans.property.SimpleStringProperty;
@@ -365,11 +367,83 @@ public class GuiController {
 
     private ArtistResponse getArtistInfo(String name) throws IOException {
         try {
+
+            String response = HTTPTools.sendGet("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%s", true);
+            ArtistResponse artist = App.objectMapper.readValue(response, ArtistResponse.class);
+
+
             return App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%s", name), true), ArtistResponse.class);
         } catch (IOException e) {
             throw new IOException("Impossible de mapper l'objet", e);
         }
     }
+
+
+    public void retrieveInformation(String selectedOption, String query) {
+        if (selectedOption.equals("album")) {
+            retrieveAlbumInformation(query);
+        } else if (selectedOption.equals("tag")) {
+            retrieveTagInformation(query);
+        } else if (selectedOption.equals("artist")) {
+            retrieveArtistInformation(query);
+        } else if (selectedOption.equals("music")) {
+            retrieveMusicInformation(query);
+        } else {
+            System.out.println("Option sélectionnée invalide.");
+        }
+    }
+
+    private void retrieveAlbumInformation(String query) {
+        try {
+            String response = HTTPTools.sendGet("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&artist=Cher&album=Believe", true);
+            AlbumResponse album = App.objectMapper.readValue(response, AlbumResponse.class);
+           
+        
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveTagInformation(String query) {
+        try {
+
+            String response = HTTPTools.sendGet("http://ws.audioscrobbler.com/2.0/?method=tag.getinfo&tag=disco", true);
+            TagResponse tag = App.objectMapper.readValue(response,TagResponse.class);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveArtistInformation(String query) {
+        try {
+           
+            String response = HTTPTools.sendGet("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=Cher&format=json", true);
+            TagResponse tag = App.objectMapper.readValue(response,TagResponse.class);
+
+
+
+
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveMusicInformation(String query) {
+        try {
+
+            String response = HTTPTools.sendGet("https://www.last.fm/api/show/music.getInfo?music=", true);
+            TrackResponse music = App.objectMapper.readValue(response,TrackResponse.class);
+
+
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // ========
     // ======== Fonction d'initialisation
