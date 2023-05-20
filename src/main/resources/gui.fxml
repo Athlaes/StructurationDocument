@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -10,15 +11,16 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ul.miage.sd.GuiController">
+<TabPane cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" scaleShape="false" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ul.miage.sd.GuiController">
   <tabs>
     <Tab text="Connexion">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="btnConnexion" layoutX="186.0" layoutY="161.0" mnemonicParsing="false" onAction="#connectUser" text="Se connecter" />
-                  <Button fx:id="btnDeconnexion" layoutX="300.0" layoutY="161.0" mnemonicParsing="false" onAction="#connectUser" text="Se déconnecter" />
+                  <Button fx:id="btnConnexion" layoutX="401.0" layoutY="295.0" mnemonicParsing="false" onAction="#connectUser" prefWidth="214.0" text="Se connecter" />
+                  <Button fx:id="btnDeconnexion" layoutX="738.0" layoutY="295.0" mnemonicParsing="false" onAction="#connectUser" text="Se déconnecter" />
                   <Label fx:id="labConnexion" layoutX="14.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Bonjour cher utilisateur ! " />
                </children></AnchorPane>
       </content>
@@ -27,17 +29,33 @@
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <ChoiceBox fx:id="selectType" layoutX="14.0" layoutY="21.0" prefHeight="25.0" prefWidth="157.0" />
-                  <TextArea layoutX="169.0" layoutY="127.0" prefHeight="230.0" prefWidth="417.0" />
-                  <TextField fx:id="txtArtiste" layoutX="331.0" layoutY="21.0" prefHeight="25.0" prefWidth="255.0" />
-                  <TextField fx:id="txtAlbum" layoutX="331.0" layoutY="54.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Label fx:id="labArtiste" layoutX="246.0" layoutY="25.0" style="-fx-font-weight: bold;" text="Nom d'artiste" />
-                  <Label fx:id="labAlbum" layoutX="246.0" layoutY="58.0" style="-fx-font-weight: bold;" text="Nom d'album" />
-                  <TextField fx:id="txtTrack" layoutX="331.0" layoutY="54.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Label fx:id="labTrack" layoutX="214.0" layoutY="58.0" style="-fx-font-weight: bold;" text="Nom de la musique" />
-                  <Label fx:id="labTag" layoutX="256.0" layoutY="25.0" style="-fx-font-weight: bold;" text="Nom du tag" />
-                  <TextField fx:id="txtTag" layoutX="331.0" layoutY="21.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Button fx:id="btnRechercher" layoutX="510.0" layoutY="91.0" mnemonicParsing="false" text="Rechercher" />
+                  <ChoiceBox fx:id="selectType" layoutX="29.0" layoutY="30.0" prefHeight="25.0" prefWidth="226.0" />
+                  <TextArea cacheShape="false" centerShape="false" layoutX="29.0" layoutY="239.0" prefHeight="433.0" prefWidth="420.0" scaleShape="false" />
+                  <TextField fx:id="txtArtiste" layoutX="191.0" layoutY="82.0" prefHeight="25.0" prefWidth="255.0" />
+                  <TextField fx:id="txtAlbum" layoutX="191.0" layoutY="115.0" prefHeight="25.0" prefWidth="255.0" />
+                  <Label fx:id="labArtiste" layoutX="106.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom d'artiste" />
+                  <Label fx:id="labAlbum" layoutX="106.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom d'album" />
+                  <TextField fx:id="txtTrack" layoutX="191.0" layoutY="115.0" prefHeight="25.0" prefWidth="255.0" />
+                  <Label fx:id="labTrack" layoutX="74.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom de la musique" />
+                  <Label fx:id="labTag" layoutX="116.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom du tag" />
+                  <TextField fx:id="txtTag" layoutX="191.0" layoutY="82.0" prefHeight="25.0" prefWidth="255.0" />
+                  <Button fx:id="btnRechercher" layoutX="370.0" layoutY="152.0" mnemonicParsing="false" text="Rechercher" />
+                  <Label layoutX="29.0" layoutY="211.0" style="-fx-font-weight: bold;" text="Information sur l'élément trouvé" />
+                  <Separator layoutX="502.0" layoutY="15.0" orientation="VERTICAL" prefHeight="663.0" prefWidth="10.0" />
+                  <Pane fx:id="paneCommentaire" layoutX="483.0" layoutY="5.0" prefHeight="681.0" prefWidth="787.0">
+                     <children>
+                        <TextArea cacheShape="false" centerShape="false" layoutX="228.0" layoutY="17.0" prefHeight="110.0" prefWidth="535.0" scaleShape="false" />
+                        <Label layoutX="36.0" layoutY="27.0" style="-fx-font-weight: bold;" text="Laisser un nouveau commentaire" />
+                        <Button layoutX="713.0" layoutY="149.0" mnemonicParsing="false" text="Poster" />
+                        <Label layoutX="36.0" layoutY="209.0" style="-fx-font-weight: bold;" text="Liste des commentaires" />
+                        <TableView layoutX="36.0" layoutY="233.0" prefHeight="434.0" prefWidth="729.0">
+                          <columns>
+                            <TableColumn prefWidth="187.0" text="Initiateur" />
+                            <TableColumn prefWidth="534.0" text="Commentaire" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </Pane>
                </children></AnchorPane>
       </content>
     </Tab>
@@ -45,30 +63,30 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <Button layoutX="444.0" layoutY="39.0" mnemonicParsing="false" onAction="#getSimilar" text="Chercher des similarités" />
-                  <TextField fx:id="txtArtiste1" layoutX="14.0" layoutY="39.0" prefHeight="25.0" prefWidth="206.0" />
-                  <TextField fx:id="txtArtiste2" layoutX="229.0" layoutY="39.0" prefHeight="25.0" prefWidth="206.0" />
+                  <Button layoutX="1114.0" layoutY="39.0" mnemonicParsing="false" onAction="#getSimilar" text="Chercher des similarités" />
+                  <TextField fx:id="txtArtiste1" layoutX="14.0" layoutY="39.0" prefHeight="25.0" prefWidth="530.0" />
+                  <TextField fx:id="txtArtiste2" layoutX="563.0" layoutY="39.0" prefHeight="25.0" prefWidth="530.0" />
                   <Label layoutX="14.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Artiste 1" />
-                  <Label layoutX="229.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Artiste 2" />
-                  <TableView fx:id="tabSimilarTracks" layoutX="15.0" layoutY="98.0" prefHeight="106.0" prefWidth="570.0">
+                  <Label layoutX="563.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Artiste 2" />
+                  <TableView fx:id="tabSimilarTracks" layoutX="15.0" layoutY="98.0" prefHeight="270.0" prefWidth="1243.0">
                     <columns>
-                      <TableColumn fx:id="colSimilarTrackName" prefWidth="139.0" text="Nom" />
-                      <TableColumn fx:id="colSimilarTrackMbid" minWidth="0.0" prefWidth="101.0" text="Mbid" />
-                        <TableColumn fx:id="colSimilarTrackArtist" prefWidth="108.0" text="Artiste" />
-                        <TableColumn fx:id="colSimilarTrackAlbum" prefWidth="128.0" text="Album" />
-                        <TableColumn fx:id="colSimilarTrackTags" prefWidth="95.0" text="Tags" />
+                      <TableColumn fx:id="colSimilarTrackName" prefWidth="229.0" text="Nom" />
+                      <TableColumn fx:id="colSimilarTrackMbid" minWidth="0.0" prefWidth="252.0" text="Mbid" />
+                        <TableColumn fx:id="colSimilarTrackArtist" prefWidth="251.0" text="Artiste" />
+                        <TableColumn fx:id="colSimilarTrackAlbum" prefWidth="261.0" text="Album" />
+                        <TableColumn fx:id="colSimilarTrackTags" prefWidth="249.0" text="Tags" />
                     </columns>
                   </TableView>
-                  <TableView fx:id="tabSimilarAlbums" layoutX="15.0" layoutY="239.0" prefHeight="106.0" prefWidth="570.0">
+                  <TableView fx:id="tabSimilarAlbums" layoutX="15.0" layoutY="407.0" prefHeight="270.0" prefWidth="1243.0">
                      <columns>
-                        <TableColumn fx:id="colSimilarAlbumsName" editable="false" prefWidth="143.0" text="Nom" />
-                        <TableColumn fx:id="colSimilarAlbumsMbid" editable="false" prefWidth="148.0" text="Mbid" />
-                        <TableColumn fx:id="colSimilarAlbumsArtist" editable="false" prefWidth="160.0" text="Artiste" />
-                        <TableColumn fx:id="colSimilarAlbumsTags" editable="false" prefWidth="117.0" text="Tags" />
+                        <TableColumn fx:id="colSimilarAlbumsName" editable="false" prefWidth="294.0" text="Nom" />
+                        <TableColumn fx:id="colSimilarAlbumsMbid" editable="false" prefWidth="327.0" text="Mbid" />
+                        <TableColumn fx:id="colSimilarAlbumsArtist" editable="false" prefWidth="273.0" text="Artiste" />
+                        <TableColumn fx:id="colSimilarAlbumsTags" editable="false" prefWidth="348.0" text="Tags" />
                      </columns>
                   </TableView>
                   <Label layoutX="15.0" layoutY="74.0" style="-fx-font-weight: bold;" text="Musiques" />
-                  <Label layoutX="15.0" layoutY="214.0" style="-fx-font-weight: bold;" text="Albums" />
+                  <Label layoutX="14.0" layoutY="379.0" style="-fx-font-weight: bold;" text="Albums" />
                </children></AnchorPane>
         </content>
       </Tab>
@@ -89,13 +107,13 @@
                   <Label layoutX="289.0" layoutY="23.0" style="-fx-font-weight: bold;" text="Classement" />
                   <ChoiceBox fx:id="selectCountry" layoutX="65.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
                   <ChoiceBox fx:id="selectClassement" layoutX="364.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
-                  <TableView fx:id="tabClassementT" layoutX="28.0" layoutY="54.0" prefHeight="300.0" prefWidth="546.0">
+                  <TableView fx:id="tabClassementT" layoutX="28.0" layoutY="54.0" prefHeight="606.0" prefWidth="1230.0">
                      <columns>
-                        <TableColumn fx:id="colNameT" editable="false" prefWidth="91.0" sortable="false" text="Nom" />
-                        <TableColumn fx:id="colNbEcouteT" editable="false" prefWidth="113.0" sortType="DESCENDING" text="Nombre d'écoute" />
-                        <TableColumn fx:id="colMbidT" editable="false" prefWidth="107.0" sortable="false" text="Mbid" />
-                        <TableColumn fx:id="colUrlT" editable="false" prefWidth="163.0" sortable="false" text="Url" />
-                        <TableColumn fx:id="colEvolutionT" editable="false" prefWidth="71.0" sortable="false" text="Evolution" />
+                        <TableColumn fx:id="colNameT" editable="false" prefWidth="225.0" sortable="false" text="Nom" />
+                        <TableColumn fx:id="colNbEcouteT" editable="false" prefWidth="161.0" sortType="DESCENDING" text="Nombre d'écoute" />
+                        <TableColumn fx:id="colMbidT" editable="false" prefWidth="320.0" sortable="false" text="Mbid" />
+                        <TableColumn fx:id="colUrlT" editable="false" prefWidth="460.0" sortable="false" text="Url" />
+                        <TableColumn fx:id="colEvolutionT" editable="false" prefWidth="63.0" sortable="false" text="Evolution" />
                      </columns>
                   </TableView>
                </children></AnchorPane>
