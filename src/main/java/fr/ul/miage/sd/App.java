@@ -38,7 +38,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        stage.setTitle("Barrage");
+        stage.setTitle("OpenFM");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/gui.fxml"));    
             Scene scene = new Scene(root);
