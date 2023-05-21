@@ -14,13 +14,17 @@ public class AlbumResponseBody {
     @JsonProperty("name")
     @JsonAlias("title")
     private String name;
+
     @JsonDeserialize(using = ArtistDeserializer.class)
     private String artist;
+
     private String mbid;
+
     @JsonProperty("tags")
     @JsonAlias("toptags")
     @JsonDeserialize(using = TagsDeserializer.class)
     private TagsResponse toptags; 
+
     private List<TrackResponseBody> tracks;
 
     public void setArtist(String artist) {
@@ -65,7 +69,7 @@ public class AlbumResponseBody {
 
     public Boolean hasPartialData() {
         boolean partial = false;
-        if (Objects.isNull(this.getArtist()) ||
+        if (
             Objects.isNull(this.getMbid()) || 
             Objects.isNull(this.getName()) ||
             Objects.isNull(this.getToptags()) ||
@@ -76,7 +80,7 @@ public class AlbumResponseBody {
     }
 
     public String toString() {
-        String res = String.format("Nom : %s%nMbid : %s%nArtiste : %s%n", this.name, this.mbid, this.artist);
+        String res = String.format("Nom : %s%nMbid : %s%nArtiste : %n", this.name, this.mbid);
         if (Objects.nonNull(this.toptags)) {
             res += String.format("Tags : %s%n", this.toptags.toString());
         }

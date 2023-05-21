@@ -340,7 +340,7 @@ public class GuiController {
                 }
                 this.searchMoreAlbumIfNeeded(tagCommuns, albums);
                 this.searchMoreTrackIfNeeded(tagCommuns, tracks);
-                
+
                 this.tabSimilarAlbums.setItems(FXCollections.observableArrayList(albums));
                 this.tabSimilarTracks.setItems(FXCollections.observableArrayList(tracks));
             }
@@ -381,7 +381,8 @@ public class GuiController {
 
     private TagTopTrackResponse getTagTopTrack(String tagName) throws IOException{
         try {
-            return App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=%s", tagName), true, false), TagTopTrackResponse.class);
+            String res = HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=%s", tagName), true, false);
+            return App.objectMapper.readValue(res, TagTopTrackResponse.class);
         } catch (IOException e) {
             throw new IOException(MAP_ERROR, e);
         }
@@ -389,7 +390,8 @@ public class GuiController {
 
     private TagTopAlbumResponse getTagTopAlbum(String tagName) throws IOException{
         try {
-            return App.objectMapper.readValue(HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=%s", tagName), true, false), TagTopAlbumResponse.class);
+            String res = HTTPTools.sendGet(String.format("http://ws.audioscrobbler.com/2.0/?method=tag.gettopalbums&tag=%s", tagName), true, false);
+            return App.objectMapper.readValue(res, TagTopAlbumResponse.class);
         } catch (IOException e) {
             throw new IOException(MAP_ERROR, e);
         }

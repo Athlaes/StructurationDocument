@@ -25,7 +25,7 @@ public class TopArtistRepository {
     private static TopArtistRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public TopArtistRepository() {
+    private TopArtistRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"geotopartist");
     }
 

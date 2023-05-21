@@ -19,7 +19,7 @@ public class TagRepository {
     private static TagRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public TagRepository() {
+    private TagRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"tags");
     }
 

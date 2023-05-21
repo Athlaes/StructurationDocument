@@ -47,7 +47,6 @@ public class HTTPTools {
 			}
 		}
 		url += "&format=json";
-
 		// vérifie le temps écoulé depuis la requête précédente
 		while (timer && (System.currentTimeMillis() - last < mt));
 		last = System.currentTimeMillis();

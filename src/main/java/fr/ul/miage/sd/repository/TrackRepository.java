@@ -27,7 +27,7 @@ public class TrackRepository {
     private static TrackRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public TrackRepository() {
+    private TrackRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"tracks");
         this.collection.createIndex(Indexes.ascending("mbid"));
     }

@@ -28,7 +28,7 @@ public class TopTrackRepository {
     private static TopTrackRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public TopTrackRepository() {
+    private TopTrackRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"geotoptracks");
     }
 

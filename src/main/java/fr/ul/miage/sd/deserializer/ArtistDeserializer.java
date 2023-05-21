@@ -17,12 +17,11 @@ public class ArtistDeserializer extends JsonDeserializer<String> {
     @Override
     public String deserialize(JsonParser arg0, DeserializationContext arg1) {
         try {
-            String res = arg0.readValueAs(String.class);
-            if (Objects.isNull(res) || res.isEmpty()) {
-                ArtistResponseBody artistResponseBody = arg0.readValueAs(ArtistResponseBody.class);
+            ArtistResponseBody artistResponseBody = arg0.readValueAs(ArtistResponseBody.class);
+            if (Objects.nonNull(artistResponseBody) && !artistResponseBody.getName().isEmpty()) {
                 return artistResponseBody.getName();
             } else {
-                return res;
+                return arg0.readValueAs(String.class);
             }
         } catch (IOException e) {
             return "";

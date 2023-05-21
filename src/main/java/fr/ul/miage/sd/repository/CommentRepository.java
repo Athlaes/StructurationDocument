@@ -23,7 +23,7 @@ public class CommentRepository {
     private static CommentRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public CommentRepository() {
+    private CommentRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"comments");
     }
 

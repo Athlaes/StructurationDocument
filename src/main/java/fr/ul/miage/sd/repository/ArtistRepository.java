@@ -27,7 +27,7 @@ public class ArtistRepository {
     private static ArtistRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public ArtistRepository() {
+    private ArtistRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"artists");
         this.collection.createIndex(Indexes.ascending("mbid"));
     }

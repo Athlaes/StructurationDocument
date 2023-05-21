@@ -28,7 +28,7 @@ public class AlbumRepository {
     private static AlbumRepository repository = null;
     private MongoCollection<Document> collection;
 
-    public AlbumRepository() {
+    private AlbumRepository() {
         this.collection = MongoService.getInstance().getCollectionInDatabase(App.COL_BEGINNING+"albums");
         this.collection.createIndex(Indexes.ascending("mbid"));
     }
