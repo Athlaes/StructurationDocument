@@ -13,6 +13,8 @@ public class GeoTrackResponse {
         this.name = trackResponse.getName();
         this.listeners = trackResponse.getListeners();
         this.url = trackResponse.getUrl();
+        this.mbid = trackResponse.getMbid();
+        this.evolution = trackResponse.getEvolution();
     }
 
     public String getEvolution() {
