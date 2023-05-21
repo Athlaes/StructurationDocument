@@ -16,9 +16,8 @@ import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Artist;
-import fr.ul.miage.sd.metier.SimilarArtist;
 import fr.ul.miage.sd.response.ArtistResponseBody;
-import fr.ul.miage.sd.response.TagResponse;
+import fr.ul.miage.sd.response.TagResponseBody;
 import fr.ul.miage.sd.response.TagsResponse;
 import fr.ul.miage.sd.service.MongoService;
 
@@ -64,7 +63,7 @@ public class ArtistRepository {
             ArtistResponseBody artistResponse= App.objectMapper.readValue(document.toJson(), ArtistResponseBody.class);
 
             if (Objects.nonNull(artist.getTagsNames())) {
-                List<TagResponse> tagList = new ArrayList<>();
+                List<TagResponseBody> tagList = new ArrayList<>();
                 for (String tagName : artist.getTagsNames()) {
                     tagList.add(TagRepository.getInstance().findOne(tagName));  
                 }
@@ -84,7 +83,7 @@ public class ArtistRepository {
 
             if (Objects.nonNull(artistResponse.getTags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : artistResponse.getTags().getTags()) {
+                for (TagResponseBody tag : artistResponse.getTags().getTags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }

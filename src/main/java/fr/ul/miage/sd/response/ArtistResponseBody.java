@@ -1,6 +1,8 @@
 package fr.ul.miage.sd.response;
 
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -94,5 +96,31 @@ public class ArtistResponseBody {
 
     public SimilarArtist getSimilar() {
         return similar;
+    }
+
+    public boolean hasPartialData() {
+        boolean partial = false;
+        if (Objects.isNull(this.evolution) ||
+            Objects.isNull(this.mbid) ||
+            Objects.isNull(this.name) ||
+            Objects.isNull(this.url) ||
+            Objects.isNull(this.bio) ||
+            Objects.isNull(this.similar) ||
+            Objects.isNull(this.tags) ||
+            Objects.isNull(this.stats)) {
+            partial = true;
+        }
+        return partial;
+    }
+
+    public String toString() {
+        String res = String.format("Nom : %s%nMbid : %s%nUrl : %s%n", this.name, this.mbid, this.url);
+        if (Objects.nonNull(this.bio)) {
+            res += String.format("Description : %s%nApparue le : %s%n", bio.getSummary(), bio.getPublished());
+        }
+        if (Objects.nonNull(this.stats)) {
+            res += String.format("Nombre d'écoute : %s%n", this.stats.getListeners());
+        }
+        return res;
     }
 }

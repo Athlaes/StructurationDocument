@@ -8,19 +8,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TagsResponse {
     @JsonProperty("tag")
     @JsonAlias({"similarTags", "tags"})
-    private List<TagResponse> tags;
+    private List<TagResponseBody> tags;
 
     public TagsResponse() {}
     
-    public TagsResponse(List<TagResponse> tagResponses) {
+    public TagsResponse(List<TagResponseBody> tagResponses) {
         this.tags = tagResponses;
     }
 
-    public List<TagResponse> getTags() {
+    public List<TagResponseBody> getTags() {
         return tags;
     }
 
-    public void setTags(List<TagResponse> toptags) {
+    public void setTags(List<TagResponseBody> toptags) {
         this.tags = toptags;
+    }
+
+    public String toString() {
+        String res = "";
+        for (TagResponseBody tagResponseBody : tags) {
+            res += tagResponseBody.getName() + ",";
+        }
+        return res;
     }
 }

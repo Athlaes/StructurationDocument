@@ -52,7 +52,7 @@ public class App extends Application {
     private static ObservableList<String> getPays() {
         try {
             String url = "https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search/?dataset=curiexplore-pays&q=&sort=iso3&facet=name_en";
-            CountryResponse response = objectMapper.readValue(HTTPTools.sendGet(url, false), CountryResponse.class);
+            CountryResponse response = objectMapper.readValue(HTTPTools.sendGet(url, false, false), CountryResponse.class);
             ObservableList<String> tmpPays = FXCollections.observableArrayList();
             response.getFacetGroups().get(0).getPays().forEach(x -> tmpPays.add(x.getName()));
             return tmpPays;

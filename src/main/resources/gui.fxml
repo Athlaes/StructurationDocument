@@ -12,6 +12,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <TabPane cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" scaleShape="false" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ul.miage.sd.GuiController">
   <tabs>
@@ -20,7 +21,7 @@
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
                   <Button fx:id="btnConnexion" layoutX="401.0" layoutY="295.0" mnemonicParsing="false" onAction="#connectUser" prefWidth="214.0" text="Se connecter" />
-                  <Button fx:id="btnDeconnexion" layoutX="738.0" layoutY="295.0" mnemonicParsing="false" onAction="#connectUser" text="Se déconnecter" />
+                  <Button fx:id="btnDeconnexion" layoutX="658.0" layoutY="295.0" mnemonicParsing="false" onAction="#disconnectUser" prefWidth="214.0" text="Se déconnecter" />
                   <Label fx:id="labConnexion" layoutX="14.0" layoutY="14.0" style="-fx-font-weight: bold;" text="Bonjour cher utilisateur ! " />
                </children></AnchorPane>
       </content>
@@ -30,30 +31,35 @@
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
                   <ChoiceBox fx:id="selectType" layoutX="29.0" layoutY="30.0" prefHeight="25.0" prefWidth="226.0" />
-                  <TextArea cacheShape="false" centerShape="false" layoutX="29.0" layoutY="239.0" prefHeight="433.0" prefWidth="420.0" scaleShape="false" />
+                  <TextArea fx:id="textAreaInfo" cacheShape="false" centerShape="false" editable="false" layoutX="29.0" layoutY="239.0" prefHeight="433.0" prefWidth="420.0" scaleShape="false" wrapText="true" />
                   <TextField fx:id="txtArtiste" layoutX="191.0" layoutY="82.0" prefHeight="25.0" prefWidth="255.0" />
                   <TextField fx:id="txtAlbum" layoutX="191.0" layoutY="115.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Label fx:id="labArtiste" layoutX="106.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom d'artiste" />
-                  <Label fx:id="labAlbum" layoutX="106.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom d'album" />
+                  <Label fx:id="labArtiste" layoutX="106.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom d'artiste*" />
+                  <Label fx:id="labAlbum" layoutX="106.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom d'album*" />
                   <TextField fx:id="txtTrack" layoutX="191.0" layoutY="115.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Label fx:id="labTrack" layoutX="74.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom de la musique" />
-                  <Label fx:id="labTag" layoutX="116.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom du tag" />
+                  <Label fx:id="labTrack" layoutX="74.0" layoutY="119.0" style="-fx-font-weight: bold;" text="Nom de la musique*" />
+                  <Label fx:id="labTag" layoutX="116.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Nom du tag*" />
                   <TextField fx:id="txtTag" layoutX="191.0" layoutY="82.0" prefHeight="25.0" prefWidth="255.0" />
-                  <Button fx:id="btnRechercher" layoutX="370.0" layoutY="152.0" mnemonicParsing="false" text="Rechercher" />
+                  <Button fx:id="btnRechercher" layoutX="370.0" layoutY="152.0" mnemonicParsing="false" onAction="#search" text="Rechercher" />
                   <Label layoutX="29.0" layoutY="211.0" style="-fx-font-weight: bold;" text="Information sur l'élément trouvé" />
                   <Separator layoutX="502.0" layoutY="15.0" orientation="VERTICAL" prefHeight="663.0" prefWidth="10.0" />
                   <Pane fx:id="paneCommentaire" layoutX="483.0" layoutY="5.0" prefHeight="681.0" prefWidth="787.0">
                      <children>
-                        <TextArea cacheShape="false" centerShape="false" layoutX="228.0" layoutY="17.0" prefHeight="110.0" prefWidth="535.0" scaleShape="false" />
+                        <TextArea fx:id="txtAreaComment" cacheShape="false" centerShape="false" layoutX="228.0" layoutY="17.0" prefHeight="110.0" prefWidth="535.0" scaleShape="false" />
                         <Label layoutX="36.0" layoutY="27.0" style="-fx-font-weight: bold;" text="Laisser un nouveau commentaire" />
-                        <Button layoutX="713.0" layoutY="149.0" mnemonicParsing="false" text="Poster" />
+                        <Button fx:id="btnPoster" layoutX="713.0" layoutY="149.0" mnemonicParsing="false" onAction="#postComment" text="Poster" />
                         <Label layoutX="36.0" layoutY="209.0" style="-fx-font-weight: bold;" text="Liste des commentaires" />
-                        <TableView layoutX="36.0" layoutY="233.0" prefHeight="434.0" prefWidth="729.0">
+                        <TableView fx:id="tabComments" layoutX="36.0" layoutY="233.0" prefHeight="434.0" prefWidth="729.0">
                           <columns>
-                            <TableColumn prefWidth="187.0" text="Initiateur" />
-                            <TableColumn prefWidth="534.0" text="Commentaire" />
+                            <TableColumn fx:id="colNameComment" editable="false" prefWidth="200.0" sortable="false" text="Initiateur" />
+                            <TableColumn fx:id="colComments" editable="false" prefWidth="528.0" sortable="false" text="Commentaire" />
                           </columns>
                         </TableView>
+                        <Label layoutX="36.0" layoutY="44.0" prefHeight="84.0" prefWidth="186.0" text="Impossible de laisser un commentaire si l'mbid est null (indisponible du côté de l'API)" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
                      </children>
                   </Pane>
                </children></AnchorPane>
@@ -94,26 +100,26 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <TableView fx:id="tabClassement" layoutX="28.0" layoutY="54.0" prefHeight="300.0" prefWidth="546.0">
+                  <TableView fx:id="tabClassement" layoutX="25.0" layoutY="55.0" prefHeight="610.0" prefWidth="1230.0">
                     <columns>
-                      <TableColumn fx:id="colName" editable="false" prefWidth="91.0" sortable="false" text="Nom" />
-                      <TableColumn fx:id="colNbEcoute" editable="false" prefWidth="113.0" sortType="DESCENDING" text="Nombre d'écoute" />
-                        <TableColumn fx:id="colMbid" editable="false" prefWidth="107.0" sortable="false" text="Mbid" />
-                        <TableColumn fx:id="colUrl" editable="false" prefWidth="163.0" sortable="false" text="Url" />
-                        <TableColumn fx:id="colEvolution" editable="false" prefWidth="71.0" sortable="false" text="Evolution" />
+                      <TableColumn fx:id="colName" editable="false" prefWidth="224.0" sortable="false" text="Nom" />
+                      <TableColumn fx:id="colNbEcoute" editable="false" prefWidth="177.0" sortType="DESCENDING" text="Nombre d'écoute" />
+                        <TableColumn fx:id="colMbid" editable="false" prefWidth="330.0" sortable="false" text="Mbid" />
+                        <TableColumn fx:id="colUrl" editable="false" prefWidth="412.0" sortable="false" text="Url" />
+                        <TableColumn fx:id="colEvolution" editable="false" prefWidth="86.0" sortable="false" text="Evolution" />
                     </columns>
                   </TableView>
                   <Label layoutX="28.0" layoutY="23.0" style="-fx-font-weight: bold;" text="Pays" />
-                  <Label layoutX="289.0" layoutY="23.0" style="-fx-font-weight: bold;" text="Classement" />
-                  <ChoiceBox fx:id="selectCountry" layoutX="65.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
-                  <ChoiceBox fx:id="selectClassement" layoutX="364.0" layoutY="19.0" prefHeight="25.0" prefWidth="210.0" />
-                  <TableView fx:id="tabClassementT" layoutX="28.0" layoutY="54.0" prefHeight="606.0" prefWidth="1230.0">
+                  <Label layoutX="334.0" layoutY="23.0" style="-fx-font-weight: bold;" text="Classement" />
+                  <ChoiceBox fx:id="selectCountry" layoutX="65.0" layoutY="19.0" prefHeight="25.0" prefWidth="250.0" />
+                  <ChoiceBox fx:id="selectClassement" layoutX="418.0" layoutY="19.0" prefHeight="25.0" prefWidth="250.0" />
+                  <TableView fx:id="tabClassementT" layoutX="25.0" layoutY="55.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="1230.0">
                      <columns>
                         <TableColumn fx:id="colNameT" editable="false" prefWidth="225.0" sortable="false" text="Nom" />
-                        <TableColumn fx:id="colNbEcouteT" editable="false" prefWidth="161.0" sortType="DESCENDING" text="Nombre d'écoute" />
-                        <TableColumn fx:id="colMbidT" editable="false" prefWidth="320.0" sortable="false" text="Mbid" />
-                        <TableColumn fx:id="colUrlT" editable="false" prefWidth="460.0" sortable="false" text="Url" />
-                        <TableColumn fx:id="colEvolutionT" editable="false" prefWidth="63.0" sortable="false" text="Evolution" />
+                        <TableColumn fx:id="colNbEcouteT" editable="false" prefWidth="176.0" sortType="DESCENDING" text="Nombre d'écoute" />
+                        <TableColumn fx:id="colMbidT" editable="false" prefWidth="330.0" sortable="false" text="Mbid" />
+                        <TableColumn fx:id="colUrlT" editable="false" prefWidth="412.0" sortable="false" text="Url" />
+                        <TableColumn fx:id="colEvolutionT" editable="false" prefWidth="95.0" sortable="false" text="Evolution" />
                      </columns>
                   </TableView>
                </children></AnchorPane>

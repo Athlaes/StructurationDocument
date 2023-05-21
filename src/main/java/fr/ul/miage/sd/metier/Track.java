@@ -1,13 +1,15 @@
 package fr.ul.miage.sd.metier;
 
 import java.util.List;
+
+import fr.ul.miage.sd.response.ArtistResponseBody;
 public class Track {
     private String name;
     private String mbid;
     private int duration;
     private int listeners;
     private int playcount;
-    private String artistMbid;
+    private ArtistResponseBody artist;
     private String albumMbid;
     private List<String> tagsNames; 
     private Wiki wiki;
@@ -28,10 +30,6 @@ public class Track {
 
     public void setEvolution(String evolution) {
         this.evolution = evolution;
-    }
-
-    public void setArtistMbid(String artistMbid) {
-        this.artistMbid = artistMbid;
     }
 
     public void setDuration(int duration) {
@@ -60,10 +58,6 @@ public class Track {
 
     public void setWiki(Wiki wiki) {
         this.wiki = wiki;
-    }
-
-    public String getArtistMbid() {
-        return artistMbid;
     }
 
     public int getDuration() {
@@ -100,5 +94,13 @@ public class Track {
 
     public void setAlbumMbid(String albumMbid) {
         this.albumMbid = albumMbid;
+    }
+
+    public ArtistResponseBody getArtist() {
+        return artist;
+    }
+
+    public void setArtist(ArtistResponseBody artist) {
+        this.artist = artist;
     }
 }

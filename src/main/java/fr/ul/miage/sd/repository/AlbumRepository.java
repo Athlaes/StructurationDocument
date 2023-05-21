@@ -17,7 +17,7 @@ import com.mongodb.client.model.UpdateOptions;
 import fr.ul.miage.sd.App;
 import fr.ul.miage.sd.metier.Album;
 import fr.ul.miage.sd.response.AlbumResponseBody;
-import fr.ul.miage.sd.response.TagResponse;
+import fr.ul.miage.sd.response.TagResponseBody;
 import fr.ul.miage.sd.response.TagsResponse;
 import fr.ul.miage.sd.response.TrackResponseBody;
 import fr.ul.miage.sd.service.MongoService;
@@ -49,6 +49,15 @@ public class AlbumRepository {
         return null;
     }
 
+    public AlbumResponseBody findOneByNameAndArtist(String name, String artist) {
+        FindIterable<Document> findIterable = this.collection.find(new Document("name", new Document("$regex", "(?i)"+name)).append("artist", new Document("$regex", "(?i)"+artist)));
+        Document document = findIterable.first();
+        if(Objects.nonNull(document)){
+            return this.parseToAlbumResponse(document);
+        }
+        return null;
+    }
+
     public List<AlbumResponseBody> findAllByTags(String searchedTag) {
         List<AlbumResponseBody> responseList = new ArrayList<>();
         FindIterable<Document> findIterable = this.collection.find(new Document("toptagsNames", searchedTag));
@@ -67,7 +76,7 @@ public class AlbumRepository {
             AlbumResponseBody albumResponse= App.objectMapper.readValue(document.toJson(), AlbumResponseBody.class);
 
             if (Objects.nonNull(album.getToptagsNames())) {
-                List<TagResponse> tagList = new ArrayList<>();
+                List<TagResponseBody> tagList = new ArrayList<>();
                 for (String tagNames : album.getToptagsNames()) {
                     tagList.add(TagRepository.getInstance().findOne(tagNames));
                 }
@@ -96,7 +105,7 @@ public class AlbumRepository {
 
             if (Objects.nonNull(albumResponse.getToptags())) {
                 List<String> tagList = new ArrayList<>();
-                for (TagResponse tag : albumResponse.getToptags().getTags()) {
+                for (TagResponseBody tag : albumResponse.getToptags().getTags()) {
                     String name = TagRepository.getInstance().createOrUpdate(tag);
                     tagList.add(name);
                 }

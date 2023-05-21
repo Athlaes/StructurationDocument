@@ -1,5 +1,7 @@
 package fr.ul.miage.sd.response;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -117,5 +119,40 @@ public class TrackResponseBody {
 
     public void setToptags(TagsResponse toptags) {
         this.toptags = toptags;
+    }
+
+    public boolean hasPartialData() {
+        boolean partial = false;
+        if (Objects.isNull(this.getEvolution()) ||
+            Objects.isNull(this.getMbid()) ||
+            Objects.isNull(this.getName()) ||
+            Objects.isNull(this.getUrl()) ||
+            Objects.isNull(this.getAlbum()) ||
+            Objects.isNull(this.getArtist()) ||
+            Objects.isNull(this.getDuration()) ||
+            Objects.isNull(this.getListeners()) ||
+            Objects.isNull(this.getPlaycount()) ||
+            Objects.isNull(this.getToptags()) ||
+            Objects.isNull(this.getWiki())) {
+            partial = true;
+        }
+        return partial;
+    }
+
+    public String toString() {
+        String res = String.format("Nom : %s%nMbid : %s%nNombre d'écoutes : %s%nDurée : %s (s)%nUrl : %s%n", this.name, this.mbid, this.listeners, this.duration, this.url);
+        if (Objects.nonNull(this.artist)) {
+            res += String.format("Artiste : %s%n", this.artist.getName());
+        }
+        if (Objects.nonNull(this.album)) {
+            res += String.format("Album : %s%n", this.album.getName());
+        }
+        if (Objects.nonNull(this.toptags)) {
+            res += String.format("Tags : %s%n", toptags.toString());
+        }
+        if (Objects.nonNull(wiki)) {
+            res += String.format("Description : %s%nPubliée : %s", this.wiki.getSummary(), this.wiki.getPublished());
+        }
+        return res;
     }
 }

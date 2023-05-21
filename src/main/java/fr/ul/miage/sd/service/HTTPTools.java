@@ -26,20 +26,25 @@ public class HTTPTools {
 	// dernière requête HTTP
 	private static long last;
 
+	private HTTPTools () {}
+
 	/**
 	 * Envoi une requête GET
 	 * @param URL de la requête
 	 * @return reponse
 	 * @throws IOException
 	 */
-	public static String sendGet(String url, boolean timer) throws IOException {
+	public static String sendGet(String url, boolean timer, boolean auth) throws IOException {
+		logger.info(String.format("Appel vers : %s", url));
 		url = url.replace(" ", "%20");
         url += "&api_key=" + App.API_KEY;
-		if (Objects.nonNull(App.getSignature())) {
-			url += String.format("&api_sig=%s", App.getSignature());
-		}
-		if(Objects.nonNull(App.getSession())) {
-			url += String.format("sk=%s", App.getSession().getKey());
+		if (auth) {
+			if (Objects.nonNull(App.getSignature())) {
+				url += String.format("&api_sig=%s", App.getSignature());
+			}
+			if(Objects.nonNull(App.getSession())) {
+				url += String.format("sk=%s", App.getSession().getKey());
+			}
 		}
 		url += "&format=json";
 
@@ -47,7 +52,6 @@ public class HTTPTools {
 		while (timer && (System.currentTimeMillis() - last < mt));
 		last = System.currentTimeMillis();
 		HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-		logger.info(String.format("Appel vers : %s", url));
 		try {
 			// préparation de la requête
 			StringBuilder result = new StringBuilder();

@@ -12,7 +12,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.UpdateOptions;
 
 import fr.ul.miage.sd.App;
-import fr.ul.miage.sd.response.TagResponse;
+import fr.ul.miage.sd.response.TagResponseBody;
 import fr.ul.miage.sd.service.MongoService;
 
 public class TagRepository {
@@ -30,12 +30,12 @@ public class TagRepository {
         return repository;
     }
 
-    public TagResponse findOne(String name) {
+    public TagResponseBody findOne(String name) {
         try {
-            FindIterable<Document> findIterable = this.collection.find(new Document("name", name));
+            FindIterable<Document> findIterable = this.collection.find(new Document("name", new Document("$regex", "(?i)"+name)));
             Document document = findIterable.first();
             if(Objects.nonNull(document)){
-                return App.objectMapper.readValue(document.toJson(), TagResponse.class);
+                return App.objectMapper.readValue(document.toJson(), TagResponseBody.class);
             }
             return null;
         }catch (JsonMappingException e) {
@@ -45,7 +45,7 @@ public class TagRepository {
         }
     }
 
-    public String createOrUpdate(TagResponse tagResponse) {
+    public String createOrUpdate(TagResponseBody tagResponse) {
         try {
             Document tagDocument = Document.parse(App.objectMapper.writeValueAsString(tagResponse));
             this.collection.updateOne(new Document("name", tagResponse.getName()), new Document("$set", tagDocument), new UpdateOptions().upsert(true));
