@@ -24,8 +24,8 @@ public class AlbumResponseBody {
     @JsonAlias("toptags")
     @JsonDeserialize(using = TagsDeserializer.class)
     private TagsResponse toptags; 
-
-    private List<TrackResponseBody> tracks;
+    
+    private TracksResponse tracks;
 
     public void setArtist(String artist) {
         this.artist = artist;
@@ -35,20 +35,12 @@ public class AlbumResponseBody {
         this.mbid = mbid;
     }
 
-    public void setTracks(List<TrackResponseBody> tracks) {
-        this.tracks = tracks;
-    }
-
     public String getArtist() {
         return artist;
     }
 
     public String getMbid() {
         return mbid;
-    }
-
-    public List<TrackResponseBody> getTracks() {
-        return tracks;
     }
 
     public void setName(String name) {
@@ -80,10 +72,18 @@ public class AlbumResponseBody {
     }
 
     public String toString() {
-        String res = String.format("Nom : %s%nMbid : %s%nArtiste : %n", this.name, this.mbid);
+        String res = String.format("Nom : %s%nMbid : %s%nArtiste : %s%n", this.name, this.mbid, this.artist);
         if (Objects.nonNull(this.toptags)) {
             res += String.format("Tags : %s%n", this.toptags.toString());
         }
         return res;
+    }
+
+    public TracksResponse getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(TracksResponse tracks) {
+        this.tracks = tracks;
     }
 }

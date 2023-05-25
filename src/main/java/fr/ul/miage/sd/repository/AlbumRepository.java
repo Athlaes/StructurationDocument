@@ -19,7 +19,9 @@ import fr.ul.miage.sd.metier.Album;
 import fr.ul.miage.sd.response.AlbumResponseBody;
 import fr.ul.miage.sd.response.TagResponseBody;
 import fr.ul.miage.sd.response.TagsResponse;
+import fr.ul.miage.sd.response.TrackResponse;
 import fr.ul.miage.sd.response.TrackResponseBody;
+import fr.ul.miage.sd.response.TracksResponse;
 import fr.ul.miage.sd.service.MongoService;
 
 public class AlbumRepository {
@@ -88,7 +90,7 @@ public class AlbumRepository {
                 for (String mbidTrack : album.getTracksIds()) {
                     trackList.add(TrackRepository.getInstance().findOne(mbidTrack));
                 }
-                albumResponse.setTracks(trackList);
+                albumResponse.setTracks(new TracksResponse(trackList));
             }
             
             return albumResponse;
@@ -114,7 +116,7 @@ public class AlbumRepository {
 
             if (Objects.nonNull(albumResponse.getTracks())) {
                 List<String> trackList = new ArrayList<>();
-                for (TrackResponseBody track : albumResponse.getTracks()) {
+                for (TrackResponseBody track : albumResponse.getTracks().getTrack()) {
                     String mbid = TrackRepository.getInstance().createOrUpdate(track);
                     trackList.add(mbid);
                 }
